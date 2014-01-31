@@ -1,0 +1,152 @@
+name: ZPort
+main: com.zeeveener.zport.ZPort
+author: zeeveener
+version: 0.0.1-ALPHA
+description: Teleportation Suite for Bukkit
+commands:
+    zsetwarp:
+        aliases: [setwarp, sw, zsw]
+        usage: /<command> (name) (private)
+    zremwarp:
+        aliases: [remwarp, delwarp, zrw, zdw, rw, dw]
+        usage: /<command> (warp)
+    zwarp:
+        aliases: [warp, zw, w]
+        usage: /<command> (warp)
+    zsethome:
+        aliases: [sethome, sh, zsh]
+        usage: /<command>
+    zhome:
+        aliases: [home, h, zh]
+        usage: /<command> (world)
+    ztp:
+        aliases: [tp]
+        usage: /<command> (player)
+    ztphere:
+        aliases: [tphere, tph, ztph]
+        usage: /<command> (player)
+    ztpto:
+        aliases: [tpto]
+        usage: /<command> (x) (y) (z) (world)
+permissions:
+    zp.tp:
+        description: Allow all teleportation features
+        children:
+            zp.tp.to: true
+            zp.tp.here: true
+    zp.tp.to:
+        description: Allow players to teleport to all targets
+        children:
+            zp.tp.to.player: true
+            zp.tp.to.op: true
+            zp.tp.to.coord: true
+    zp.tp.here:
+        description: Allow players to teleport targets to themselves
+        children:
+            zp.tp.here.player: true
+            zp.tp.here.op: true
+    zp.tp.to.player: 
+        description: Teleport to other players
+    zp.tp.to.coord:
+        description: Teleport to coordinates
+    zp.tp.to.op:
+        description: Teleport to ops
+    zp.tp.here.player:
+        description: Teleport players to yourself.
+    zp.tp.here.op:
+        description: Teleport ops to yourself
+    zp.home:
+        description: Allow usage and setting of homes
+        children: 
+            zp.home.use: true
+            zp.home.set: true
+    zp.home.use:
+        description: Teleport to home FROM the world this permission is set for
+    zp.home.set:
+        description: Set the location of the home in the player's current world
+    zp.warp:
+        description: Allows all warping features
+        children:
+            zp.warp.modify: true
+            zp.warp.create: true
+            zp.warp.destroy: true
+            zp.warp.use: true
+    zp.warp.modify:
+        description: Allows all warp modification features
+        children:
+            zp.warp.modify.own: true
+            zp.warp.modify.others: true
+    zp.warp.modify.own:
+        description: Allows modification of all of own warps
+        children:
+            zp.warp.modify.own.public: true
+            zp.warp.modify.own.private: true
+    zp.warp.modify.others:
+        description: Allows modification of all of everyone else's warps
+        children:
+            zp.warp.modify.others.public: true
+            zp.warp.modify.others.private: true
+    zp.warp.create:
+        description: Allows all warp creation features
+        children:
+            zp.warp.create.private: true
+            zp.warp.create.public: true
+    zp.warp.destroy:
+        description: Allows all warp destruction features
+        children:
+            zp.warp.destroy.others: true
+            zp.warp.destroy.own: true
+    zp.warp.destroy.others:
+        description: Allows destruction of other players private/public warps
+        children:
+            zp.warp.destroy.others.private: true
+            zp.warp.destroy.others.public: true
+    zp.warp.destroy.own:
+        description: Allows destruction of own private/public warps
+        children:
+            zp.warp.destroy.own.private: true
+            zp.warp.destroy.own.public: true
+    zp.warp.use:
+        description: Allows use of all warps
+        children:
+            zp.warp.use.own: true
+            zp.warp.use.others: true
+    zp.warp.use.own:
+        description: Allows use of all your own warps
+        children:
+            zp.warp.use.own.private: true
+            zp.warp.use.own.public: true
+    zp.warp.use.others:
+        description: Allows use of all of everyone else's private/public warps
+        children:
+            zp.warp.use.others.public: true
+            zp.warp.use.others.private: true
+    zp.warp.modify.own.public:
+        description: Modify one's own public warps
+    zp.warp.modify.own.private:
+        description: Modify one's own private warps
+    zp.warp.modify.others.public:
+        description: Modify everyone else's public warps
+    zp.warp.modify.others.private:
+        description: Modify everyone else's private warps
+    zp.warp.create.private:
+        description: Create private warps
+    zp.warp.create.public:
+        description: Create public warps
+    zp.warp.destroy.own.public:
+        description: Destroy one's own public warps
+    zp.warp.destroy.own.private:
+        description: Destroy one's own private warps
+    zp.warp.destroy.others.private:
+        description: Destroy everyone else's private warps
+    zp.warp.destroy.others.public:
+        description: Destroy everyone else's public warps
+    zp.warp.use.own.public:
+        description: Use one's own public warps
+    zp.warp.use.own.private:
+        description: Use one's own private warps
+    zp.warp.use.others.public:
+        description: Use everyone else's public warps
+    zp.warp.use.others.private:
+        description: Use everyone else's private warps
+    
