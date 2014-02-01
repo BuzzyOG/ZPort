@@ -22,8 +22,10 @@ public class Config extends ZConfig{
 		if(!configContains("Cooldown.Warp")) set("Cooldown.Warp", 0);
 		if(!configContains("Cooldown.Home")) set("Cooldown.Home", 0);
 		if(!configContains("Cooldown.Back")) set("Cooldown.Back", 0);
+		if(!configContains("Cooldown.Teleport")) set("Cooldown.Teleport", 0);
 		if(!configContains("Warmup.Warp")) set("Warmup.Warp", 0);
 		if(!configContains("Warmup.Home")) set("Warmup.Home", 0);
 		if(!configContains("Warmup.Back")) set("Warmup.Back", 0);
+		if(!configContains("Warmup.Teleport")) set("Warmup.Teleport", 0);
 	}
 }
