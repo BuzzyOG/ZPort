@@ -28,12 +28,30 @@ commands:
     ztpto:
         aliases: [tpto]
         usage: /<command> (x) (y) (z) (world)
+    zback:
+        aliases: [back, b, zb]
+        usage: /<command>
 permissions:
+    zp.exempt:
+        description: Exempt from all limitations and stops (Does not include command permissions)
+        children:
+            zp.exempt.warmups: true
+            zp.exempt.cooldowns: true
+            zp.exempt.tpblocks: true
+    zp.exempt.tpblocks:
+        description: Teleport without being stopped by tpblocks.
+    zp.exempt.warmups:
+        description: Teleport/Warp/Home/Back without waiting first.
+    zp.exempt.cooldowns:
+        description: Teleport/Warp/Home/Back immediately after doing so.
     zp.tp:
         description: Allow all teleportation features
         children:
             zp.tp.to: true
             zp.tp.here: true
+            zp.tp.back: true
+    zp.tp.back:
+        description: Return to a previous location
     zp.tp.to:
         description: Allow players to teleport to all targets
         children:

@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
+import com.zeeveener.zport.checks.Cooldown;
 import com.zeeveener.zport.objects.Home;
 
 public class UseHome implements CommandExecutor{
@@ -50,7 +52,13 @@ public class UseHome implements CommandExecutor{
 			return true;
 		}
 		
+		if(!Cooldown.doneCooldown(p, "home")){
+			ZChat.error(s, "You must wait for the Cooldown period to elapse first...");
+			return true;
+		}
+		
 		h.goTo(p);
+		new Cooldown(p, "home", ZPort.config.getInt("Cooldown.Home", 0));
 		ZChat.message(s, "Arrived Home in: " + ZChat.m + h.getLocation().getWorld().getName());
 		return true;
 	}

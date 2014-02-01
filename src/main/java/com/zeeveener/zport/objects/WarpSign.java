@@ -15,7 +15,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.backend.Backend;
+import com.zeeveener.zport.checks.Warmup;
 
 public class WarpSign{
 
@@ -73,8 +75,8 @@ public class WarpSign{
 		if(!exists(n)) return null;
 		WarpSign w;
 		if((w = getFromCache(n)) == null){
-			Backend.updateType();
-			if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+			
+			if(Backend.isSQL()){
 				ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
 				try {
 					if(rs == null || !rs.next()) return null;
@@ -112,7 +114,7 @@ public class WarpSign{
 	}
 	
 	public void goTo(Player p){
-		p.teleport(loc);
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), loc);
 		lastUsed = System.currentTimeMillis();
 		uses++;
 		addToCache(this);
@@ -143,8 +145,8 @@ public class WarpSign{
 		return w;
 	}
 	public void save(){
-		Backend.updateType();
-		if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+		
+		if(Backend.isSQL()){
 			String tN = "NOTSET";
 			if(target != null) tN = target.getName();
 			Backend.getSQL().prepared("INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
@@ -186,8 +188,8 @@ public class WarpSign{
 	}
 	public void delete(){
 		removeFromCache(this);
-		Backend.updateType();
-		if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+		
+		if(Backend.isSQL()){
 			Backend.getSQL().prepared("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[]{name, owner});
 		}else{
 			File f = new File(Backend.getSignFolder(), name+".yml");
@@ -199,8 +201,8 @@ public class WarpSign{
 	}
 	public static boolean exists(String n){
 		if(existsInCache(n)) return true;
-		Backend.updateType();
-		if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+		
+		if(Backend.isSQL()){
 			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
 			try {
 				return (rs != null && rs.next());

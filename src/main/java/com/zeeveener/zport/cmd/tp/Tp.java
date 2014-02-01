@@ -7,6 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
+import com.zeeveener.zport.checks.Cooldown;
+import com.zeeveener.zport.checks.TpBlocks;
+import com.zeeveener.zport.checks.Warmup;
 
 public class Tp implements CommandExecutor{
 
@@ -41,11 +45,18 @@ public class Tp implements CommandExecutor{
 			return true;
 		}
 		
-		/*
-		 * Check for if target player is blocking teleportation here
-		 */
+		if(TpBlocks.isBlocking(to) && !p.hasPermission("zp.exempt.tpblocks")){
+			ZChat.error(s, to.getName() + " has Teleportation Blocked.");
+			return true;
+		}
+
+		if(!Cooldown.doneCooldown(p, "tele")){
+			ZChat.error(s, "You must wait for the Cooldown period to elapse first...");
+			return true;
+		}
 		
-		p.teleport(to);
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Teleport", 0), to.getLocation());
+		new Cooldown(p, "tele", ZPort.config.getInt("Cooldown.Teleport", 0));
 		ZChat.message(s, "You have Teleported to: " + ZChat.m + to.getName());
 		ZChat.message(to, ZChat.m + p.getName() + ZChat.g + " has Teleported to you.");
 		

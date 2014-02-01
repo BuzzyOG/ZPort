@@ -9,6 +9,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
+import com.zeeveener.zport.checks.Cooldown;
+import com.zeeveener.zport.checks.Warmup;
 
 public class TpTo implements CommandExecutor{
 
@@ -46,7 +49,13 @@ public class TpTo implements CommandExecutor{
 			return false;
 		}
 		
-		p.teleport(new Location(w, x,y,z));
+		if(!Cooldown.doneCooldown(p, "tele")){
+			ZChat.error(s, "You must wait for the Cooldown period to elapse first...");
+			return true;
+		}
+		
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Teleport", 0), new Location(w, x,y,z));
+		new Cooldown(p, "tele", ZPort.config.getInt("Cooldown.Teleport", 0));
 		ZChat.message(s, "You have arrived at: " + ZChat.m + x + "," + y + "," + z + ZChat.g + " in " + ZChat.m + w.getName());
 		
 		return true;

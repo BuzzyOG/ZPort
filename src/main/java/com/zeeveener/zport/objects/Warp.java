@@ -15,7 +15,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.backend.Backend;
+import com.zeeveener.zport.checks.Warmup;
 
 public class Warp {
 
@@ -74,8 +76,8 @@ public class Warp {
 	}
 	public void delete(){
 		removeFromWarpCache(name);
-		Backend.updateType();
-		if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+		
+		if(Backend.isSQL()){
 			Backend.getSQL().prepared("", new Object[]{});
 		}else{
 			File f = new File(Backend.getWarpFolder(), name+".yml");
@@ -86,7 +88,7 @@ public class Warp {
 		}
 	}
 	public void goTo(Player p){
-		p.teleport(location);
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), location);
 		lastUsed = System.currentTimeMillis();
 		uses++;
 		addToWarpCache(this);
@@ -164,8 +166,8 @@ public class Warp {
 	}
 	public static boolean exists(String n){
 		if(Warp.existsInWarpCache(n)) return true;
-		Backend.updateType();
-		if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+		
+		if(Backend.isSQL()){
 			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_warps WHERE name='?';", new Object[]{n});
 			try {
 				return (rs != null && rs.next());
@@ -181,7 +183,7 @@ public class Warp {
 	public static Warp getWarp(String n){
 		Warp w;
 		if((w = Warp.getFromWarpCache(n)) == null){
-			if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+			if(Backend.isSQL()){
 				ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_warps WHERE name='?';", new Object[]{n});
 				try {
 					rs.next();
@@ -211,8 +213,8 @@ public class Warp {
 		long c = getCreated();
 		long lu = getLastUsed();
 		Location l = getLocation();
-		Backend.updateType();
-		if(Backend.getType().equalsIgnoreCase("mysql") || Backend.getType().equalsIgnoreCase("sqlite")){
+		
+		if(Backend.isSQL()){
 			Backend.getSQL().prepared("INSERT INTO zp_warps(date_created,last_used,total_uses,name,owner,private,x,y,z,yaw,pitch,world) "
 					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?", 
 					new Object[]{c,lu,u,n,o,p,l.getX(),l.getY(),l.getZ(),l.getYaw(),l.getPitch(),l.getWorld().getName(),lu,u});

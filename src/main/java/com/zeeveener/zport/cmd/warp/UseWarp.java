@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
+import com.zeeveener.zport.checks.Cooldown;
 import com.zeeveener.zport.objects.Warp;
 
 public class UseWarp implements CommandExecutor{
@@ -63,8 +65,14 @@ public class UseWarp implements CommandExecutor{
 		 * Add check for allowed to travel to warps in other worlds here
 		 */
 		
+		if(!Cooldown.doneCooldown(p, "warp")){
+			ZChat.error(s, "You must wait for the Cooldown period to elapse first...");
+			return true;
+		}
+		
 		ZChat.message(s, "Travelling to: " + ZChat.m + w.getName());
 		w.goTo(p);
+		new Cooldown(p, "warp", ZPort.config.getInt("Cooldown.Warp", 0));
 		return true;
 	}
 }
