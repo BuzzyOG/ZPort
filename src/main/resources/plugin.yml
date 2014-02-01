@@ -31,13 +31,82 @@ commands:
     zback:
         aliases: [back, b, zb]
         usage: /<command>
+    zpset:
+        aliases: [zps]
+        usage: /<command> [toggle] (value) (options)
 permissions:
+    zp.set:
+        description: Allows usage of all setting altering commands
+        children:
+            zp.set.toggle: true
+            zp.set.cooldown: true
+    zp.set.cooldown:
+        description: Change the value of all Cooldowns
+        children:
+            zp.set.cooldown.warp: true
+            zp.set.cooldown.tele: true
+            zp.set.cooldown.home: true
+            zp.set.cooldown.back: true
+    zp.set.cooldown.home:
+        description: Change the cooldown period for going home
+    zp.set.cooldown.warp:
+        description: Change the cooldown period for warping
+    zp.set.cooldown.tele:
+        description: Change the cooldown period for teleportation
+    zp.set.cooldown.back:
+        description: Change the cooldown period for going back
+    zp.set.warmup:
+        description: Change the value of all Warmups
+        children:
+            zp.set.warmup.warp: true
+            zp.set.warmup.tele: true
+            zp.set.warmup.home: true
+            zp.set.warmup.back: true
+    zp.set.warmup.home:
+        description: Change the warmup period for going home
+    zp.set.warmup.warp:
+        description: Change the warmup period for warping
+    zp.set.warmup.tele:
+        description: Change the warmup period for teleportation
+    zp.set.warmup.back:
+        description: Change the warmup period for going back
+    zp.set.toggle:
+        description: Toggle all major features in game
+        children:
+            zp.set.toggle.warp: true
+            zp.set.toggle.home: true
+            zp.set.toggle.sign: true
+            zp.set.toggle.tele: true
+    zp.set.toggle.warp:
+        description: Toggle the Warping feature
+    zp.set.toggle.home:
+        description: Toggle the Home feature
+    zp.set.toggle.tele:
+        description: Toggle the Teleportation feature
+    zp.set.toggle.sign:
+        description: Toggle the WarpSign feature
     zp.exempt:
         description: Exempt from all limitations and stops (Does not include command permissions)
         children:
             zp.exempt.warmups: true
             zp.exempt.cooldowns: true
             zp.exempt.tpblocks: true
+            zp.exempt.toggles: true
+    zp.exempt.toggles:
+        description: Can use features even if disabled
+        children:
+            zp.exempt.toggles.warp: true
+            zp.exempt.toggles.sign: true
+            zp.exempt.toggles.tele: true
+            zp.exempt.toggles.home: true
+    zp.exempt.toggles.warp:
+        description: Allow usage of warps even when they are disabled
+    zp.exempt.toggles.home:
+        description: Allow usage of homes even when they are disabled
+    zp.exempt.toggles.tele:
+        description: Allow usage of teleportation even when it is disabled
+    zp.exempt.toggles.sign:
+        description: Allow usage of warpsigns even when they are disabled
     zp.exempt.tpblocks:
         description: Teleport without being stopped by tpblocks.
     zp.exempt.warmups:
