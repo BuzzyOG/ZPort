@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.objects.Warp;
 
 public class SetWarp implements CommandExecutor{
@@ -20,6 +21,12 @@ public class SetWarp implements CommandExecutor{
 		}
 
 		Player p = (Player)s;
+		
+		if(!ZPort.config.getBoolean("Feature.Warp", false) && !p.hasPermission("zp.exempt.toggles.warp")){
+			ZChat.error(s, "Warp features have been disabled.");
+			return true;
+		}
+		
 		if(args.length == 0 || args.length >= 3){
 			ZChat.error(p, "Invalid Number of Arguments.");
 			return false;

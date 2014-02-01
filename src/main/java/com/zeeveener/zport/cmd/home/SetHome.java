@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.objects.Home;
 
 public class SetHome implements CommandExecutor{
@@ -20,6 +21,11 @@ public class SetHome implements CommandExecutor{
 		}
 		
 		Player p = (Player)s;
+		
+		if(!ZPort.config.getBoolean("Feature.Home", false) && !s.hasPermission("zp.exempt.toggles.home")){
+			ZChat.error(s, "Home features have been disabled.");
+			return true;
+		}
 		
 		if(!p.hasPermission("zp.home.set")){
 			ZChat.error(s, "You don't have permission to set homes in this world.");

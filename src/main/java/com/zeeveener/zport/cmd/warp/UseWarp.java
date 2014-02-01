@@ -28,6 +28,11 @@ public class UseWarp implements CommandExecutor{
 		
 		Player p = (Player)s;
 		
+		if(!ZPort.config.getBoolean("Feature.Warp", false) && !p.hasPermission("zp.exempt.toggles.warp")){
+			ZChat.error(s, "Warp features have been disabled.");
+			return true;
+		}
+		
 		if(!Warp.exists(args[0])){
 			ZChat.error(s, "That Warp doesn't exist.");
 			return true;

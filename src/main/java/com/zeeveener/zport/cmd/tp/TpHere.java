@@ -29,6 +29,12 @@ public class TpHere implements CommandExecutor{
 		}
 		
 		Player p = (Player)s;
+		
+		if(!ZPort.config.getBoolean("Feature.Teleportation", false) && !s.hasPermission("zp.exempt.toggles.tele")){
+			ZChat.error(s, "Teleportation features have been disabled.");
+			return true;
+		}
+		
 		Player get;
 		
 		if((get = Bukkit.getPlayer(args[0])) == null || !get.isOnline()){

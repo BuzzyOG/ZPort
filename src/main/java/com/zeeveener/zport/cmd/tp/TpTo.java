@@ -31,6 +31,11 @@ public class TpTo implements CommandExecutor{
 		
 		Player p = (Player)s;
 		
+		if(!ZPort.config.getBoolean("Feature.Teleportation", false) && !s.hasPermission("zp.exempt.toggles.tele")){
+			ZChat.error(s, "Teleportation features have been disabled.");
+			return true;
+		}
+		
 		if(!p.hasPermission("zp.tp.to.coord")){
 			ZChat.error(p, "You don't have permission to TP to Coordinates.");
 			return true;

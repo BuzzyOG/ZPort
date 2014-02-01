@@ -19,6 +19,10 @@ public class Config extends ZConfig{
 		if(!configContains("Backend.MySQL.Port")) set("Backend.MySQL.Port", 3306);
 		if(!configContains("Updater.Check")) set("Updater.Check", true);
 		if(!configContains("Updater.Download")) set("Updater.Download", true);
+		if(!configContains("Feature.Warp")) set("Feature.Warp", true);
+		if(!configContains("Feature.Home")) set("Feature.Home", true);
+		if(!configContains("Feature.Teleportation")) set("Feature.Teleportation", true);
+		if(!configContains("Feature.WarpSign")) set("Feature.WarpSign", true);
 		if(!configContains("Cooldown.Warp")) set("Cooldown.Warp", 0);
 		if(!configContains("Cooldown.Home")) set("Cooldown.Home", 0);
 		if(!configContains("Cooldown.Back")) set("Cooldown.Back", 0);

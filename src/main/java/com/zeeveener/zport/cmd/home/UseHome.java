@@ -27,6 +27,11 @@ public class UseHome implements CommandExecutor{
 		
 		Player p = (Player)s;
 		
+		if(!ZPort.config.getBoolean("Feature.Home", false) && !s.hasPermission("zp.exempt.toggles.home")){
+			ZChat.error(s, "Home features have been disabled.");
+			return true;
+		}
+		
 		Home h;
 		if(args.length == 1){
 			if(Home.exists(p, args[0])){
