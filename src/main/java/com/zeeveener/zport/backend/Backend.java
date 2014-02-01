@@ -39,6 +39,10 @@ public class Backend {
 	public static String getType(){ return type;}
 	public static void setType(String s){ type = s;}
 	
+	public synchronized static boolean isSQL(){
+		updateType();
+		return (type.equalsIgnoreCase("mysql") || type.equalsIgnoreCase("sqlite"));
+	}
 	public synchronized static void updateType(){
 		if(!ZPort.config.getString("Backend.Type", "file").equalsIgnoreCase(type)){
 			String old = type;
