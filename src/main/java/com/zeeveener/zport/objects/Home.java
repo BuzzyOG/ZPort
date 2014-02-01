@@ -48,12 +48,14 @@ public class Home {
 		}
 	}
 	public static void removeFromCache(Home h){
+		if(h == null)return;
 		synchronized(lock){
 			if(!cache.containsKey(h.getOwner() + "-" + h.getLocation().getWorld().getName())) return;
 			cache.remove(h.getOwner() + "-" + h.getLocation().getWorld().getName());
 		}
 	}
 	public static void addToCache(Home h){
+		if(h == null)return;
 		synchronized(lock){
 			if(cache.containsKey(h.getOwner() + "-" + h.getLocation().getWorld().getName())) return;
 			cache.put(h.getOwner() + "-" + h.getLocation().getWorld().getName(), h);
@@ -63,7 +65,6 @@ public class Home {
 	public static Home getHome(Player p, String w){
 		Home h = null;
 		if((h = getFromCache(p,w)) != null) return h;
-		
 		if(Backend.isSQL()){
 			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(),w});
 			try {

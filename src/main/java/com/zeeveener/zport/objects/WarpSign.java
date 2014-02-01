@@ -264,7 +264,7 @@ public class WarpSign{
 		}
 	}
 
-	public static void startWarpSignCache(){
+	public static void startCacheThread(){
 		Bukkit.getScheduler().runTaskTimerAsynchronously(Bukkit.getPluginManager().getPlugin("ZPort"), new Runnable(){
 			@Override
 			public void run() {
