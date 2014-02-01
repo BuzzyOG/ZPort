@@ -15,8 +15,17 @@ import com.zeeveener.zport.checks.Warmup;
 
 public class Back implements CommandExecutor{
 
-	public static HashMap<Player, Location> prevs = new HashMap<Player, Location>();
-	private static Object lock = new Object();
+	private static HashMap<Player, Location> prevs = new HashMap<Player, Location>();
+	
+	public synchronized static void setPreviousLocation(Player p, Location l){
+		prevs.put(p, l);
+	}
+	public synchronized static void removePreviousLocation(Player p){
+		prevs.remove(p);
+	}
+	public synchronized static Location getPreviousLocation(Player p){
+		return prevs.get(p);
+	}
 	
 	@Override
 	public boolean onCommand(CommandSender s, Command cmd, String label,
@@ -43,16 +52,14 @@ public class Back implements CommandExecutor{
 			return true;
 		}
 		
-		synchronized(lock){
-			if(!prevs.containsKey(p)){
-				ZChat.error(s, "You don't have a previous location set.");
-				return true;
-			}
-			Location l = prevs.get(p);
-			Warmup.warmup(p, ZPort.config.getInt("Warmup.Back", 0), l);
-			new Cooldown(p, "back", ZPort.config.getInt("Cooldown.Back", 0));
-			ZChat.message(s, "You have returned to your previous location.");
+		if(getPreviousLocation(p) == null){
+			ZChat.error(s, "You don't have a previous location set.");
+			return true;
 		}
+		Location l = prevs.get(p);
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Back", 0), l);
+		new Cooldown(p, "back", ZPort.config.getInt("Cooldown.Back", 0));
+		ZChat.message(s, "You have returned to your previous location.");
 		
 		return true;
 	}
