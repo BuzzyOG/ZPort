@@ -14,6 +14,16 @@ import com.zeeveener.zport.objects.WarpSign;
 
 public class ZPort extends JavaPlugin{
 	
+	/*TODO
+	 * 	- WarpList
+	 *  - Teleport Requests
+	 *  - AutoUpdater
+	 *  - Stat Collection
+	 *  - Disable features (warp/tele/home/sign)
+	 *  
+	 *  After those are done, release v1.0!
+	 */
+	
 	public static Config config;
 	
 	public void onEnable(){
