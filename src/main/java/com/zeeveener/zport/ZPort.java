@@ -19,7 +19,6 @@ public class ZPort extends JavaPlugin{
 	 *  - Teleport Requests
 	 *  - AutoUpdater
 	 *  - Stat Collection
-	 *  - Disable features (warp/tele/home/sign)
 	 *  
 	 *  After those are done, release v1.0!
 	 */

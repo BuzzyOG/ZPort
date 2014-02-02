@@ -114,7 +114,13 @@ public class WarpSign{
 	}
 	
 	public void goTo(Player p){
-		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), loc);
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), target.getLocation());
+		lastUsed = System.currentTimeMillis();
+		uses++;
+		addToCache(this);
+	}
+	public void goTo(Player p, Location l){
+		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), l);
 		lastUsed = System.currentTimeMillis();
 		uses++;
 		addToCache(this);

@@ -151,6 +151,67 @@ permissions:
         description: Teleport to home FROM the world this permission is set for
     zp.home.set:
         description: Set the location of the home in the player's current world
+    zp.warpsign:
+        description: Allow all WarpSign features
+        children:
+            zp.warpsign.create: true
+            zp.warpsign.destroy: true
+            zp.warpsign.use: true
+    zp.warpsign.create:
+        description: Allows all WarpSign creation features
+        children:
+            zp.warpsign.create.public: true
+            zp.warpsign.create.private: true
+    zp.warpsign.create.public:
+        description: Create public warpsigns
+    zp.warpsign.create.private:
+        description: Create private warpsigns
+    zp.warpsign.destroy:
+        description: Destroy all types of WarpSigns
+        children:
+            zp.warpsign.destroy.own: true
+            zp.warpsign.destroy.others: true
+    zp.warpsign.destroy.own:
+        description: Destroy all of your own warpsigns
+        children:
+            zp.warpsign.destroy.own.public: true
+            zp.warpsign.destroy.own.private: true
+    zp.warpsign.destroy.own.private:
+        description: Destroy your own private warpsigns
+    zp.warpsign.destroy.own.public:
+        description: Destroy your own public warpsigns
+    zp.warpsign.destroy.others:
+        description: Destroy other players warpsigns
+        children:
+            zp.warpsign.destroy.others.private: true
+            zp.warpsign.destroy.others.public: true
+    zp.warpsign.destroy.others.private:
+        description: Destroy other players' private warpsigns
+    zp.warpsign.destroy.others.public:
+        description: Destroy other players' public warpsigns
+    zp.warpsign.use:
+        description: Use all types of WarpSigns
+        children:
+            zp.warpsign.use.own: true
+            zp.warpsign.use.others: true
+    zp.warpsign.use.own:
+        description: Use all of your own warpsigns
+        children:
+            zp.warpsign.use.own.public: true
+            zp.warpsign.use.own.private: true
+    zp.warpsign.use.own.private:
+        description: Use your own private warpsigns
+    zp.warpsign.use.own.public:
+        description: Use your own public warpsigns
+    zp.warpsign.use.others:
+        description: Use other players warpsigns
+        children:
+            zp.warpsign.use.others.private: true
+            zp.warpsign.use.others.public: true
+    zp.warpsign.use.others.private:
+        description: Use other players' private warpsigns
+    zp.warpsign.use.others.public:
+        description: Use other players' public warpsigns
     zp.warp:
         description: Allows all warping features
         children:
