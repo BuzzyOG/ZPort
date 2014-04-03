@@ -4,6 +4,27 @@ author: zeeveener
 version: 0.0.1-ALPHA
 description: Teleportation Suite for Bukkit
 commands:
+    ztpa:
+        aliases: [tpa]
+        usage: /<command> (player)
+    ztpahere:
+        aliases: [tpahere, tpah]
+        usage: /<command> (player)
+    ztpaccept:
+        aliases: [tpaa, tpaccept, ztpaa]
+        usage: /<command>
+    ztpdeny:
+        aliases: [tpdeny, tpad, ztpad]
+        usage: /<command>
+    ztphaccept:
+        aliases: [tphaccept, tpha, ztpha]
+        usage: /<command>
+    ztphdeny:
+        aliases: [tphdeny, tphd, ztphd]
+        usage: /<command>
+    zlistwarp:
+        aliases: [listwarp, list, zlist, lw, zlw]
+        usage: /<command> (arg) (value) (arg) (value)...
     zsetwarp:
         aliases: [setwarp, sw, zsw]
         usage: /<command> (name) (private)
@@ -35,6 +56,35 @@ commands:
         aliases: [zps]
         usage: /<command> [toggle] (value) (options)
 permissions:
+    zp.request:
+        description: Allows usage of all request commands
+        children:
+            zp.request.tpa: true
+            zp.request.tpahere: true
+            zp.request.accept: true
+            zp.request.deny: true
+    zp.request.tpa:
+        description: Allows usage of /tpa
+    zp.request.tpahere:
+        description: Allows usage of /tpahere
+    zp.request.accept:
+        description: Allows usage of both accept commands
+        children:
+            zp.request.accept.tpa: true
+            zp.request.accept.tpahere: true
+    zp.request.accept.tpa:
+        description: Allows usage of /tpaccept
+    zp.request.accept.tpahere:
+        description: Allows usage of /tphaccept
+    zp.request.deny:
+        description: Allows usage of both deny commands
+        children:
+            zp.request.deny.tpa: true
+            zp.request.deny.tpahere: true
+    zp.request.deny.tpa:
+        description: Allows usage of /tpdeny
+    zp.request.deny.tpahere:
+        description: Allows usage of /tphdeny
     zp.set:
         description: Allows usage of all setting altering commands
         children:
