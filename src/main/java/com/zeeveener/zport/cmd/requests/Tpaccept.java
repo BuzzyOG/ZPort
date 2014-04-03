@@ -16,16 +16,14 @@ public class Tpaccept implements CommandExecutor{
 			ZChat.error(s, "Only players can Accept Teleport Requests at this time.");
 			return true;
 		}
-		if(args.length != 0){
-			return false;
-		}
-		
-		Player p = (Player)s;
+		if(args.length != 0){ return false; }
+
+		Player p = (Player) s;
 		if(!p.hasPermission("zp.request.accept.tpa")){
 			ZChat.error(s, "You don't have permission to use /tpaa");
 			return true;
 		}
-		
+
 		Request r = Request.getFromCache(p.getUniqueId());
 		if(r == null || r.getTeleportRequester() == null){
 			ZChat.error(s, "You don't have any Teleport Requests at this time.");
@@ -37,12 +35,12 @@ public class Tpaccept implements CommandExecutor{
 			ZChat.message(s, "The player that sent the request is not online.");
 			return true;
 		}
-		
+
 		r.fulfillTeleportRequest();
-		
+
 		ZChat.message(s, "Accepted Teleport Request.");
-		ZChat.message(requester, p.getName() + " Accepted your Teleport Request."); 
-		
+		ZChat.message(requester, p.getName() + " Accepted your Teleport Request.");
+
 		return true;
 	}
 

@@ -22,16 +22,16 @@ import com.zeeveener.zport.checks.Warmup;
 
 public class WarpSign{
 
-	private static HashMap<String, WarpSign> cache = new HashMap<String, WarpSign>();
-	private static Object lock = new Object();
-	private String name;
-	private UUID owner;
-	private int uses;
-	private long created, lastUsed;
-	private boolean priv;
-	private Location loc;
-	private WarpSign target;
-	
+	private static HashMap<String, WarpSign>	cache	= new HashMap<String, WarpSign>();
+	private static Object						lock	= new Object();
+	private String								name;
+	private UUID								owner;
+	private int									uses;
+	private long								created, lastUsed;
+	private boolean								priv;
+	private Location							loc;
+	private WarpSign							target;
+
 	public WarpSign(String n, UUID o, Boolean p, Location l, Long c, Long lu, Integer u){
 		name = n;
 		owner = o;
@@ -40,14 +40,16 @@ public class WarpSign{
 		created = c;
 		lastUsed = lu;
 		uses = u;
-		
+
 		addToCache(this);
 	}
+
 	public WarpSign(String n, UUID o, Boolean p, Location l, Long c){
-		this(n,o,p,l,c,0L,0);
+		this(n, o, p, l, c, 0L, 0);
 	}
+
 	public WarpSign(String n, UUID o, Boolean p, Location l){
-		this(n,o,p,l,System.currentTimeMillis());
+		this(n, o, p, l, System.currentTimeMillis());
 	}
 
 	private static boolean existsInCache(String n){
@@ -55,32 +57,35 @@ public class WarpSign{
 			return cache.containsKey(n);
 		}
 	}
+
 	private static void removeFromCache(WarpSign w){
 		synchronized(lock){
 			if(cache.containsKey(w.getName())) cache.remove(w.getName());
 		}
 	}
+
 	private static WarpSign getFromCache(String n){
 		synchronized(lock){
 			if(!cache.containsKey(n)) return null;
 			return cache.get(n);
 		}
 	}
+
 	private static void addToCache(WarpSign w){
 		synchronized(lock){
 			if(!cache.containsKey(w.getName())) cache.put(w.getName(), w);
 		}
 	}
-	
+
 	public static WarpSign getWarpSign(String n){
 		if(n.equalsIgnoreCase("NOTSET")) return null;
 		if(!exists(n)) return null;
 		WarpSign w;
 		if((w = getFromCache(n)) == null){
-			
+
 			if(Backend.isSQL()){
-				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
-				try {
+				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[] {n});
+				try{
 					if(rs == null || !rs.next()) return null;
 					double x = rs.getDouble("x");
 					double y = rs.getDouble("y");
@@ -96,16 +101,16 @@ public class WarpSign{
 					long c = rs.getLong("date_created");
 					long lu = rs.getLong("last_used");
 					int u = rs.getInt("total_uses");
-					
-					w = new WarpSign(na,o,p,l,c);
+
+					w = new WarpSign(na, o, p, l, c);
 					w.setLastUsed(lu);
 					w.setUses(u);
 					w.setTarget(getWarpSign(t));
-				} catch (SQLException e) {
+				}catch(SQLException e){
 					e.printStackTrace();
 				}
 			}else{
-				File f = new File(Backend.getSignFolder(), n+".yml");
+				File f = new File(Backend.getSignFolder(), n + ".yml");
 				if(!f.exists()) return null;
 				FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 				w = fromString(config.getString("Object"));
@@ -114,58 +119,84 @@ public class WarpSign{
 		addToCache(w);
 		return w;
 	}
-	
+
 	public void goTo(Player p){
 		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), target.getLocation());
 		lastUsed = System.currentTimeMillis();
 		uses++;
 		addToCache(this);
 	}
+
 	public void goTo(Player p, Location l){
 		Warmup.warmup(p, ZPort.config.getInt("Warmup.Warp", 0), l);
 		lastUsed = System.currentTimeMillis();
 		uses++;
 		addToCache(this);
 	}
-	
-	public UUID getOwner(){ return owner;}
-	public String getName(){ return name;}
-	public WarpSign getTarget(){ return target;}
-	public int getUses(){ return uses;}
-	public long getCreated(){ return created;}
-	public long getLastUsed(){ return lastUsed;}
-	public boolean getPrivate(){ return priv;}
-	public Location getLocation(){ return loc;}
-	
+
+	public UUID getOwner(){
+		return owner;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public WarpSign getTarget(){
+		return target;
+	}
+
+	public int getUses(){
+		return uses;
+	}
+
+	public long getCreated(){
+		return created;
+	}
+
+	public long getLastUsed(){
+		return lastUsed;
+	}
+
+	public boolean getPrivate(){
+		return priv;
+	}
+
+	public Location getLocation(){
+		return loc;
+	}
+
 	public void setTarget(WarpSign w){
 		target = w;
 	}
+
 	public void setLastUsed(long l){
 		lastUsed = l;
 	}
+
 	public void setUses(int u){
 		uses = u;
 	}
-	
+
 	public static WarpSign create(Player p, String n, boolean b){
 		WarpSign w = new WarpSign(n, p.getUniqueId(), b, p.getLocation());
 		w.save();
 		return w;
 	}
+
 	public void save(){
-		
+
 		if(Backend.isSQL()){
 			String tN = "NOTSET";
 			if(target != null) tN = target.getName();
-			Backend.getSQL().preparedUpdate("INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
-					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?, target='?'", 
-					new Object[]{created, lastUsed, uses, name, tN, 
-							owner.toString(), priv, loc.getX(), loc.getY(), 
-							loc.getZ(), loc.getYaw(), loc.getPitch(), 
+			Backend.getSQL().preparedUpdate(
+					"INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
+							+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?, target='?'",
+					new Object[] {created, lastUsed, uses, name, tN, owner.toString(), priv, loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(),
 							loc.getWorld().getName(), lastUsed, uses, tN});
 		}else{
-			File f = new File(Backend.getSignFolder(), name+".yml");
-			try {
+			File f = new File(Backend.getSignFolder(), name + ".yml");
+			try{
 				if(!f.exists()){
 					f.createNewFile();
 				}
@@ -189,45 +220,48 @@ public class WarpSign{
 				c.set("Location.Pitch", rtd(loc.getPitch()));
 				c.set("Object", toString());
 				c.save(f);
-			} catch (IOException e) {
+			}catch(IOException e){
 				e.printStackTrace();
 			}
 		}
 	}
+
 	public void delete(){
 		removeFromCache(this);
-		
+
 		if(Backend.isSQL()){
-			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[]{name, owner.toString()});
+			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[] {name, owner.toString()});
 		}else{
-			File f = new File(Backend.getSignFolder(), name+".yml");
+			File f = new File(Backend.getSignFolder(), name + ".yml");
 			if(f.exists()){
 				f.setWritable(true);
 				f.delete();
 			}
 		}
 	}
+
 	public static boolean exists(String n){
 		if(existsInCache(n)) return true;
-		
+
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
-			try {
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[] {n});
+			try{
 				return (rs != null && rs.next());
-			} catch (SQLException e) {
+			}catch(SQLException e){
 				e.printStackTrace();
 			}
 		}else{
-			File f = new File(Backend.getSignFolder(), n+".yml");
+			File f = new File(Backend.getSignFolder(), n + ".yml");
 			return f.exists();
 		}
 		return false;
 	}
-	private double rtd(final double d) {
+
+	private double rtd(final double d){
 		final DecimalFormat threeDForm = new DecimalFormat("#.###");
 		return Double.valueOf(threeDForm.format(d));
 	}
-	
+
 	public String toString(){
 		String n;
 		if(target == null){
@@ -235,17 +269,15 @@ public class WarpSign{
 		}else{
 			n = target.getName();
 		}
-		return "[" + name + ":" + owner.toString() + ":" + priv + ":" + n + ":" 
-				+ created + ":" + lastUsed + ":" + uses + ":" 
-				+ rtd(loc.getX()) + ":" + rtd(loc.getY()) + ":" 
-				+ rtd(loc.getZ()) + ":" + rtd(loc.getYaw()) + ":" 
-				+ rtd(loc.getPitch()) + ":" + loc.getWorld().getName() + "]";
+		return "[" + name + ":" + owner.toString() + ":" + priv + ":" + n + ":" + created + ":" + lastUsed + ":" + uses + ":" + rtd(loc.getX()) + ":"
+				+ rtd(loc.getY()) + ":" + rtd(loc.getZ()) + ":" + rtd(loc.getYaw()) + ":" + rtd(loc.getPitch()) + ":" + loc.getWorld().getName() + "]";
 	}
+
 	public static WarpSign fromString(String s){
 		try{
 			s = s.replaceAll("[", "").replaceAll("]", "");
 			String[] w = s.split(":");
-			
+
 			String n = w[0];
 			UUID o = UUID.fromString(w[1]);
 			boolean p = Boolean.parseBoolean(w[2]);
@@ -260,7 +292,7 @@ public class WarpSign{
 			float pitch = Float.parseFloat(w[11]);
 			World world = Bukkit.getServer().getWorld(w[12]);
 			Location loc = new Location(world, x, y, z, yaw, pitch);
-			
+
 			WarpSign ws = new WarpSign(n, o, p, loc, c);
 			ws.setLastUsed(l);
 			ws.setUses(u);
@@ -275,11 +307,11 @@ public class WarpSign{
 	public static void startCacheThread(){
 		Bukkit.getScheduler().runTaskTimerAsynchronously(Bukkit.getPluginManager().getPlugin("ZPort"), new Runnable(){
 			@Override
-			public void run() {
+			public void run(){
 				ZChat.toConsole("Clearing WarpSign Cache...");
 				int count = 0;
 				for(WarpSign w : cache.values()){
-					if(w.getLastUsed() <= (System.currentTimeMillis() - 10*60*1000)){
+					if(w.getLastUsed() <= (System.currentTimeMillis() - 10 * 60 * 1000)){
 						w.save();
 						removeFromCache(w);
 						count++;
@@ -287,6 +319,6 @@ public class WarpSign{
 				}
 				ZChat.toConsole("Cleared " + count + " entries from WarpSign Cache.");
 			}
-		}, 5*60*20L, 10*60*20L);
+		}, 5 * 60 * 20L, 10 * 60 * 20L);
 	}
 }

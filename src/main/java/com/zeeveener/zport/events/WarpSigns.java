@@ -23,7 +23,7 @@ public class WarpSigns implements Listener{
 	public void onSignPlace(SignChangeEvent e){
 		if(!isWarpSign(e.getBlock())) return;
 		if(ZPort.config.getBoolean("Feature.WarpSign", false)) return;
-		
+
 		Player p = e.getPlayer();
 		if(!p.hasPermission("zp.warpsign.create.public")){
 			e.setLine(0, "--Error--");
@@ -46,11 +46,12 @@ public class WarpSigns implements Listener{
 			e.setLine(3, "--Error--");
 			return;
 		}
-		
-		WarpSign sign = WarpSign.create(p, e.getLine(1), e.getLine(3).equalsIgnoreCase("private"));;
+
+		WarpSign sign = WarpSign.create(p, e.getLine(1), e.getLine(3).equalsIgnoreCase("private"));
+		;
 		WarpSign target = WarpSign.getWarpSign(e.getLine(2));
 		String targetMessage = ZChat.e + " No Target";
-		
+
 		if(target == null){
 			e.setLine(2, "-NoTarget-");
 		}else if(target.getPrivate() && !p.hasPermission("zp.warpsign.target.private")){
@@ -63,18 +64,18 @@ public class WarpSigns implements Listener{
 		ZChat.message(p, "Created WarpSign " + ZChat.m + sign.getName() + "with" + targetMessage);
 		ZChat.toConsole(p.getName() + " created WarpSign: " + sign.getName());
 	}
-	
+
 	@EventHandler
 	public void onSignBreakByPlayer(BlockBreakEvent e){
 		if(!isWarpSign(e.getBlock())) return;
 		if(ZPort.config.getBoolean("Feature.WarpSign", false)) return;
-		
+
 		Player p = e.getPlayer();
-		
+
 		Sign s = (Sign) e.getBlock().getState();
 		if(!WarpSign.exists(s.getLine(1))) return;
 		WarpSign sign = WarpSign.getWarpSign(s.getLine(1));
-		
+
 		if(!sign.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())){
 			if(sign.getPrivate() && !p.hasPermission("zp.warpsign.destroy.others.private")){
 				ZChat.error(p, "You don't have permission to destroy other players' Private WarpSigns.");
@@ -102,7 +103,7 @@ public class WarpSigns implements Listener{
 			}
 			sign.delete();
 		}
-		
+
 		if(!WarpSign.exists(s.getLine(1))){
 			ZChat.message(p, "Destroyed WarpSign: " + s.getLine(1));
 			ZChat.toConsole(p.getName() + " Destroyed WarpSign: " + s.getLine(1));
@@ -110,17 +111,17 @@ public class WarpSigns implements Listener{
 			ZChat.error(p, "An Error Occurred... Unable to Destroy Warpsign.");
 		}
 	}
-	
+
 	@EventHandler
 	public void onSignBreakByNotPlayer(BlockPhysicsEvent e){
 		if(!isWarpSign(e.getBlock())) return;
-		
+
 		Sign s = (Sign) e.getBlock().getState();
 		WarpSign sign = WarpSign.getWarpSign(s.getLine(1));
 		sign.delete();
 		ZChat.toConsole("WarpSign " + s.getLine(1) + " was broken by natural forces.");
 	}
-	
+
 	@EventHandler
 	public void onSignClick(PlayerInteractEvent e){
 		if(!(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
@@ -129,21 +130,21 @@ public class WarpSigns implements Listener{
 			ZChat.error(e.getPlayer(), "WarpSigns have been disabled.");
 			return;
 		}
-		
+
 		Player p = e.getPlayer();
 		Sign s = (Sign) e.getClickedBlock().getState();
-		
+
 		if(s.getLine(1).equalsIgnoreCase("{home}")){
 			Bukkit.getServer().dispatchCommand(p, "zhome" + p.getLocation().getWorld().getName());
 			return;
 		}
-		
+
 		WarpSign sign = WarpSign.getWarpSign(s.getLine(1));
 		if(sign.getTarget() == null){
 			ZChat.error(p, "The Target WarpSign doesn't exist.");
 			return;
 		}
-		
+
 		if(!sign.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())){
 			if(sign.getPrivate() && !p.hasPermission("zp.warpsign.use.others.private")){
 				ZChat.error(p, "You don't have permission to use other players' Private WarpSigns.");
@@ -159,11 +160,11 @@ public class WarpSigns implements Listener{
 			ZChat.error(p, "You don't have permission to use your own Public WarpSigns.");
 			return;
 		}
-		
+
 		sign.goTo(p);
 		ZChat.message(p, "You have arrived at " + sign.getTarget().getName());
 	}
-	
+
 	private boolean isWarpSign(Block b){
 		if(b.getType() != Material.SIGN && b.getType() != Material.SIGN_POST && b.getType() != Material.WALL_SIGN) return false;
 		Sign e = (Sign) b.getState();

@@ -16,30 +16,28 @@ public class Tpdeny implements CommandExecutor{
 			ZChat.error(s, "Only players can Deny Teleport Requests at this time.");
 			return true;
 		}
-		if(args.length != 0){
-			return false;
-		}
-		
-		Player p = (Player)s;
+		if(args.length != 0){ return false; }
+
+		Player p = (Player) s;
 		if(!p.hasPermission("zp.request.deny.tpa")){
 			ZChat.error(s, "You don't have permission to use /tpad");
 			return true;
 		}
-		
+
 		Request r = Request.getFromCache(p.getUniqueId());
 		if(r == null || r.getTeleportRequester() == null){
 			ZChat.error(s, "You don't have any Teleport Requests at this time.");
 			return true;
 		}
-		
+
 		r.teleportRequestFrom(null);
-		
+
 		ZChat.message(s, "Denied Teleport Request.");
 		Player requester = Bukkit.getPlayer(r.getTeleportRequester());
 		if(requester != null){
-			ZChat.message(requester, p.getName() + " Denied your Teleport Request."); 
+			ZChat.message(requester, p.getName() + " Denied your Teleport Request.");
 		}
-		
+
 		return true;
 	}
 

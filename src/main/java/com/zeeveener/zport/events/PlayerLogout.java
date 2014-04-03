@@ -15,7 +15,7 @@ public class PlayerLogout implements Listener{
 	/*
 	 * - Clear all pending requests by and to this player
 	 */
-	
+
 	@EventHandler
 	public void onLogout(PlayerQuitEvent e){
 		Player p = e.getPlayer();
@@ -24,5 +24,5 @@ public class PlayerLogout implements Listener{
 		}
 		Back.removePreviousLocation(p);
 	}
-	
+
 }

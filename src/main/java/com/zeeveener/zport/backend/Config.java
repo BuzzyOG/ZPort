@@ -4,12 +4,12 @@ import com.zeeveener.zcore.bukkit.ZConfig;
 import com.zeeveener.zport.ZPort;
 
 public class Config extends ZConfig{
-	
+
 	public Config(ZPort instance){
 		super(instance);
 		init();
 	}
-	
+
 	private void init(){
 		if(!configContains("Backend.Type")) set("Backend.Type", "file");
 		if(!configContains("Backend.MySQL.Host")) set("Backend.MySQL.Host", "localhost");
@@ -17,8 +17,9 @@ public class Config extends ZConfig{
 		if(!configContains("Backend.MySQL.User")) set("Backend.MySQL.User", "root");
 		if(!configContains("Backend.MySQL.Pass")) set("Backend.MySQL.Pass", "toor");
 		if(!configContains("Backend.MySQL.Port")) set("Backend.MySQL.Port", 3306);
-		//if(!configContains("Updater.Check")) set("Updater.Check", true);
-		//if(!configContains("Updater.Download")) set("Updater.Download", true);
+		// if(!configContains("Updater.Check")) set("Updater.Check", true);
+		// if(!configContains("Updater.Download")) set("Updater.Download",
+		// true);
 		if(!configContains("Feature.Warp")) set("Feature.Warp", true);
 		if(!configContains("Feature.Home")) set("Feature.Home", true);
 		if(!configContains("Feature.Teleportation")) set("Feature.Teleportation", true);

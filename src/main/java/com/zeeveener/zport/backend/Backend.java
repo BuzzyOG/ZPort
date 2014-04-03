@@ -5,12 +5,12 @@ import java.io.File;
 import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zport.ZPort;
 
-public class Backend {
+public class Backend{
 
-	private static SQL sql;
-	private static String type;
-	private static File signFolder, warpFolder, homeFolder;
-	
+	private static SQL		sql;
+	private static String	type;
+	private static File		signFolder, warpFolder, homeFolder;
+
 	public Backend(ZPort plugin){
 		type = ZPort.config.getString("Backend.Type", "file");
 		if(type.equalsIgnoreCase("mysql")){
@@ -31,18 +31,36 @@ public class Backend {
 			if(!homeFolder.exists()) homeFolder.mkdirs();
 		}
 	}
-	
-	public static File getWarpFolder(){ return warpFolder;}
-	public static File getHomeFolder(){ return homeFolder;}
-	public static File getSignFolder(){ return signFolder;}
-	public static SQL getSQL(){ return sql;}
-	public static String getType(){ return type;}
-	public static void setType(String s){ type = s;}
-	
+
+	public static File getWarpFolder(){
+		return warpFolder;
+	}
+
+	public static File getHomeFolder(){
+		return homeFolder;
+	}
+
+	public static File getSignFolder(){
+		return signFolder;
+	}
+
+	public static SQL getSQL(){
+		return sql;
+	}
+
+	public static String getType(){
+		return type;
+	}
+
+	public static void setType(String s){
+		type = s;
+	}
+
 	public synchronized static boolean isSQL(){
 		updateType();
 		return (type.equalsIgnoreCase("mysql") || type.equalsIgnoreCase("sqlite"));
 	}
+
 	public synchronized static void updateType(){
 		if(!ZPort.config.getString("Backend.Type", "file").equalsIgnoreCase(type)){
 			String old = type;

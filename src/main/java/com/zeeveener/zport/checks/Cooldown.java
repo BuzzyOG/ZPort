@@ -4,15 +4,15 @@ import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
-public class Cooldown {
+public class Cooldown{
 
-	private static HashMap<Player, Cooldown> warp = new HashMap<Player, Cooldown>();
-	private static HashMap<Player, Cooldown> home = new HashMap<Player, Cooldown>();
-	private static HashMap<Player, Cooldown> back = new HashMap<Player, Cooldown>();
-	private static HashMap<Player, Cooldown> tele = new HashMap<Player, Cooldown>();
-	
-	private long time;
-	
+	private static HashMap<Player, Cooldown>	warp	= new HashMap<Player, Cooldown>();
+	private static HashMap<Player, Cooldown>	home	= new HashMap<Player, Cooldown>();
+	private static HashMap<Player, Cooldown>	back	= new HashMap<Player, Cooldown>();
+	private static HashMap<Player, Cooldown>	tele	= new HashMap<Player, Cooldown>();
+
+	private long								time;
+
 	public synchronized static boolean doneCooldown(Player p, String type){
 		if(p.hasPermission("zp.exempt.cooldowns")) return true;
 		if(type.equalsIgnoreCase("warp")){
@@ -38,6 +38,7 @@ public class Cooldown {
 		}
 		return false;
 	}
+
 	private synchronized static void addCooldown(Player p, String type, Cooldown c){
 		if(type.equalsIgnoreCase("warp")){
 			if(!warp.containsKey(p)) warp.put(p, c);
@@ -49,6 +50,7 @@ public class Cooldown {
 			if(!tele.containsKey(p)) tele.put(p, c);
 		}
 	}
+
 	public synchronized static void removeCooldown(Player p, String type){
 		if(type.equalsIgnoreCase("warp")){
 			if(warp.containsKey(p)) warp.remove(p);
@@ -60,12 +62,12 @@ public class Cooldown {
 			if(tele.containsKey(p)) tele.remove(p);
 		}
 	}
-	
+
 	public Cooldown(Player p, String type, int wait){
 		time = wait;
 		addCooldown(p, type, this);
 	}
-	
+
 	public long getDoneTime(){
 		return time;
 	}

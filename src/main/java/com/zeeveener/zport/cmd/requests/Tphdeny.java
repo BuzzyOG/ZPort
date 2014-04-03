@@ -16,30 +16,28 @@ public class Tphdeny implements CommandExecutor{
 			ZChat.error(s, "Only players can Deny Teleport Requests at this time.");
 			return true;
 		}
-		if(args.length != 0){
-			return false;
-		}
-		
-		Player p = (Player)s;
+		if(args.length != 0){ return false; }
+
+		Player p = (Player) s;
 		if(!p.hasPermission("zp.request.deny.tpahere")){
 			ZChat.error(s, "You don't have permission to use /tphd");
 			return true;
 		}
-		
+
 		Request r = Request.getFromCache(p.getUniqueId());
 		if(r == null || r.getSummonRequester() == null){
 			ZChat.error(s, "You don't have any Teleport Requests at this time.");
 			return true;
 		}
-		
+
 		r.summonRequestFrom(null);
-		
+
 		ZChat.message(s, "Denied Summon Request.");
 		Player requester = Bukkit.getPlayer(r.getSummonRequester());
 		if(requester != null){
-			ZChat.message(requester, p.getName() + " Denied your Summon Request."); 
+			ZChat.message(requester, p.getName() + " Denied your Summon Request.");
 		}
-		
+
 		return true;
 	}
 

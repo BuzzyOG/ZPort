@@ -16,5 +16,5 @@ public class PlayerTeleport implements Listener{
 		Location from = e.getFrom();
 		Back.setPreviousLocation(p, from);
 	}
-	
+
 }

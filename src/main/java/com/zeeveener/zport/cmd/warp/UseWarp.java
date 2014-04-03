@@ -13,33 +13,32 @@ import com.zeeveener.zport.objects.Warp;
 public class UseWarp implements CommandExecutor{
 
 	@Override
-	public boolean onCommand(CommandSender s, Command command,
-			String label, String[] args) {
-		
+	public boolean onCommand(CommandSender s, Command command, String label, String[] args){
+
 		if(!(s instanceof Player)){
 			ZChat.error(s, "Console cannot travel to Warps.");
 			return true;
 		}
-		
+
 		if(args.length != 1){
 			ZChat.error(s, "Invalid Number of Arguments.");
 			return false;
 		}
-		
-		Player p = (Player)s;
-		
+
+		Player p = (Player) s;
+
 		if(!ZPort.config.getBoolean("Feature.Warp", false) && !p.hasPermission("zp.exempt.toggles.warp")){
 			ZChat.error(s, "Warp features have been disabled.");
 			return true;
 		}
-		
+
 		if(!Warp.exists(args[0])){
 			ZChat.error(s, "That Warp doesn't exist.");
 			return true;
 		}
-		
+
 		Warp w = Warp.getWarp(args[0]);
-		
+
 		if(w.getOwner().equals(p.getName())){
 			if(w.getPrivate()){
 				if(!p.hasPermission("zp.warp.use.own.private")){
@@ -65,16 +64,16 @@ public class UseWarp implements CommandExecutor{
 				}
 			}
 		}
-		
+
 		/*
 		 * Add check for allowed to travel to warps in other worlds here
 		 */
-		
+
 		if(!Cooldown.doneCooldown(p, "warp")){
 			ZChat.error(s, "You must wait for the Cooldown period to elapse first...");
 			return true;
 		}
-		
+
 		ZChat.message(s, "Travelling to: " + ZChat.m + w.getName());
 		w.goTo(p);
 		new Cooldown(p, "warp", ZPort.config.getInt("Cooldown.Warp", 0));

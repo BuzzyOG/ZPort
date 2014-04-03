@@ -18,25 +18,27 @@ import com.zeeveener.zport.backend.Backend;
 import com.zeeveener.zport.objects.Warp;
 
 /**
- * Takes good command information from WarplistCmdHandler and sends the relevant information to the CommandSender
- * <br>We know the data is good because WarplistCmdHandler ensures the arguments are properly formatted.
+ * Takes good command information from WarplistCmdHandler and sends the relevant
+ * information to the CommandSender <br>
+ * We know the data is good because WarplistCmdHandler ensures the arguments are
+ * properly formatted.
  */
-public class WarpList {
-	public WarpList(final CommandSender s, final String[] args){ 
+public class WarpList{
+	public WarpList(final CommandSender s, final String[] args){
 		Bukkit.getScheduler().runTaskAsynchronously(Bukkit.getServer().getPluginManager().getPlugin("ZPort"), new Runnable(){
 			@Override
 			public void run(){
 				List<Warp> warps = getAllWarps();
 				String title = "List of Warps: " + ZChat.m;
-				boolean a=false,n=false,u=false,byW=false,byP=false;
-				for(int i = 0; i < args.length-1; i+=2){
+				boolean a = false, n = false, u = false, byW = false, byP = false;
+				for(int i = 0; i < args.length - 1; i += 2){
 					String op = args[i];
-					String value = args[i+1];
-					
+					String value = args[i + 1];
+
 					if(op.equalsIgnoreCase("-a")){
 						if(a){
 							continue;
-						}else if(s instanceof Player && !((Player)s).hasPermission("zp.warp.list.byAge")){
+						}else if(s instanceof Player && !((Player) s).hasPermission("zp.warp.list.byAge")){
 							ZChat.error(s, "You don't have permission to sort by Warp Age.");
 							return;
 						}else if(value.equalsIgnoreCase("a")){
@@ -51,11 +53,11 @@ public class WarpList {
 						}
 						a = true;
 					}
-					
+
 					if(op.equalsIgnoreCase("-n")){
 						if(n){
 							continue;
-						}else if(s instanceof Player && !((Player)s).hasPermission("zp.warp.list.byName")){
+						}else if(s instanceof Player && !((Player) s).hasPermission("zp.warp.list.byName")){
 							ZChat.error(s, "You don't have permission to sort by Warp Name.");
 							return;
 						}else if(value.equalsIgnoreCase("a")){
@@ -70,11 +72,11 @@ public class WarpList {
 						}
 						n = true;
 					}
-					
+
 					if(op.equalsIgnoreCase("-u")){
 						if(u){
 							continue;
-						}else if(s instanceof Player && !((Player)s).hasPermission("zp.warp.list.byUses")){
+						}else if(s instanceof Player && !((Player) s).hasPermission("zp.warp.list.byUses")){
 							ZChat.error(s, "You don't have permission to sort by Warp Uses.");
 							return;
 						}else if(value.equalsIgnoreCase("a")){
@@ -89,7 +91,7 @@ public class WarpList {
 						}
 						u = true;
 					}
-					
+
 					if(op.equalsIgnoreCase("-w")){
 						if(byW){
 							continue;
@@ -102,7 +104,7 @@ public class WarpList {
 						title = title + "World-" + value + " ";
 						byW = true;
 					}
-					
+
 					if(op.equalsIgnoreCase("-p")){
 						if(byP){
 							continue;
@@ -112,7 +114,7 @@ public class WarpList {
 							if(!w.getOwner().toString().equals(p.getUniqueId().toString())){
 								warps.remove(w);
 							}else if(s instanceof Player){
-								Player sp = (Player)p;
+								Player sp = (Player) p;
 								if(p.getName().equals(sp.getName())){
 									if(w.getPrivate()){
 										if(!sp.hasPermission("zp.warp.list.own.private")){
@@ -140,7 +142,7 @@ public class WarpList {
 						byP = true;
 					}
 				}
-				
+
 				String msg = "";
 				for(Warp w : warps){
 					if(w.getPrivate()){
@@ -154,7 +156,7 @@ public class WarpList {
 			}
 		});
 	}
-	
+
 	private synchronized List<Warp> getAllWarps(){
 		List<Warp> list = new ArrayList<Warp>();
 		if(Backend.isSQL()){

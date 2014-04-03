@@ -30,25 +30,25 @@ import com.zeeveener.zport.objects.Warp;
 import com.zeeveener.zport.objects.WarpSign;
 
 public class ZPort extends JavaPlugin{
-	
-	/*TODO  
-	 *  After those are done, release v1.0!
+
+	/*
+	 * TODO After those are done, release v1.0!
 	 */
-	
-	public static Config config;
-	
+
+	public static Config	config;
+
 	public void onEnable(){
 		config = new Config(this);
 		new Backend(this);
 		new ZChat(this);
-		
+
 		Warp.startCacheThread();
 		WarpSign.startCacheThread();
-		
+
 		this.getServer().getPluginManager().registerEvents(new PlayerTeleport(), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerLogin(), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerLogout(), this);
-		
+
 		this.getCommand("ztpa").setExecutor(new Tpa());
 		this.getCommand("ztpahere").setExecutor(new Tpahere());
 		this.getCommand("ztpaccept").setExecutor(new Tpaccept());
@@ -67,6 +67,7 @@ public class ZPort extends JavaPlugin{
 		this.getCommand("zpset").setExecutor(new Set());
 		this.getCommand("zback").setExecutor(new Back());
 	}
+
 	public void onDisable(){
 		Bukkit.getScheduler().cancelTasks(this);
 	}
