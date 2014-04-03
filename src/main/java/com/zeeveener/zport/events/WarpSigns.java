@@ -75,7 +75,7 @@ public class WarpSigns implements Listener{
 		if(!WarpSign.exists(s.getLine(1))) return;
 		WarpSign sign = WarpSign.getWarpSign(s.getLine(1));
 		
-		if(!sign.getOwner().equalsIgnoreCase(p.getName())){
+		if(!sign.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())){
 			if(sign.getPrivate() && !p.hasPermission("zp.warpsign.destroy.others.private")){
 				ZChat.error(p, "You don't have permission to destroy other players' Private WarpSigns.");
 				e.setCancelled(true);
@@ -144,7 +144,7 @@ public class WarpSigns implements Listener{
 			return;
 		}
 		
-		if(!sign.getOwner().equalsIgnoreCase(p.getName())){
+		if(!sign.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())){
 			if(sign.getPrivate() && !p.hasPermission("zp.warpsign.use.others.private")){
 				ZChat.error(p, "You don't have permission to use other players' Private WarpSigns.");
 				return;

@@ -215,10 +215,46 @@ permissions:
     zp.warp:
         description: Allows all warping features
         children:
+            zp.warp.list: true
             zp.warp.modify: true
             zp.warp.create: true
             zp.warp.destroy: true
             zp.warp.use: true
+    zp.warp.list:
+        description: Allow all Warp Listing features
+        children:
+            zp.warp.list.byWorld: true
+            zp.warp.list.byName: true
+            zp.warp.list.byAge: true
+            zp.warp.list.byUses: true
+            zp.warp.list.own: true
+            zp.warp.list.others: true
+    zp.warp.list.byName:
+        description: Allow sorting warps by name
+    zp.warp.list.byAge:
+        description: Allow sorting warps by age
+    zp.warp.list.byUses:
+        description: Allow sorting warps by uses
+    zp.warp.list.byWorld:
+        description: Allow listing warps by world
+    zp.warp.list.own:
+        description: Allow listing ones own warps
+        children:
+            zp.warp.list.own.private: true
+            zp.warp.list.own.public: true
+    zp.warp.list.own.private:
+        description: Allows listing of ones own private warps
+    zp.warp.list.own.public:
+        description: Allows listing of ones own public warps
+    zp.warp.list.others:
+        description: Allows listing of other players warps
+        children:
+            zp.warp.list.others.private: true
+            zp.warp.list.others.public: true
+    zp.warp.list.others.private:
+        description: Allows listing of other players private warps
+    zp.warp.list.others.public:
+        description: Allows listing of other players public warps
     zp.warp.modify:
         description: Allows all warp modification features
         children:
