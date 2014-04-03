@@ -158,7 +158,7 @@ public class WarpList {
 	private synchronized List<Warp> getAllWarps(){
 		List<Warp> list = new ArrayList<Warp>();
 		if(Backend.isSQL()){
-			ResultSet set = Backend.getSQL().preparedQuery("SELECT name FROM zp_waprs;", null);
+			ResultSet set = Backend.getSQL().preparedQuery("SELECT name FROM zp_warps;", null);
 			try{
 				while(set.next()){
 					list.add(Warp.getWarp(set.getString("name")));

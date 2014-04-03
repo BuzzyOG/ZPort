@@ -17,8 +17,8 @@ public class Config extends ZConfig{
 		if(!configContains("Backend.MySQL.User")) set("Backend.MySQL.User", "root");
 		if(!configContains("Backend.MySQL.Pass")) set("Backend.MySQL.Pass", "toor");
 		if(!configContains("Backend.MySQL.Port")) set("Backend.MySQL.Port", 3306);
-		if(!configContains("Updater.Check")) set("Updater.Check", true);
-		if(!configContains("Updater.Download")) set("Updater.Download", true);
+		//if(!configContains("Updater.Check")) set("Updater.Check", true);
+		//if(!configContains("Updater.Download")) set("Updater.Download", true);
 		if(!configContains("Feature.Warp")) set("Feature.Warp", true);
 		if(!configContains("Feature.Home")) set("Feature.Home", true);
 		if(!configContains("Feature.Teleportation")) set("Feature.Teleportation", true);
