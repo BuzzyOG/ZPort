@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.zeeveener</groupId>
   <artifactId>ZPort</artifactId>
-  <version>0.0.1-ALPHA</version>
+  <version>1.0</version>
   <name>ZPort</name>
   <description>Bukkit Teleportation Suite</description>
   
@@ -63,4 +63,23 @@
         <version>0.5-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  
+  <distributionManagement>
+        <repository>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <layout>default</layout>
+            <url>
+                http://repo.zeeveener.com/content/repositories/releases/
+            </url>
+        </repository>
+        <snapshotRepository>
+            <id>deployment</id>
+            <name>Internal Releases</name>
+            <layout>default</layout>
+            <url>
+                http://repo.zeeveener.com/content/repositories/snapshots/
+            </url>
+        </snapshotRepository>
+    </distributionManagement>
 </project>

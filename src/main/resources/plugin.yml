@@ -1,7 +1,7 @@
 name: ZPort
 main: com.zeeveener.zport.ZPort
 author: zeeveener
-version: 0.0.1-ALPHA
+version: 1.0
 description: Teleportation Suite for Bukkit
 commands:
     ztpa:
