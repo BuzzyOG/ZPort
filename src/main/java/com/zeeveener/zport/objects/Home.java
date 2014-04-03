@@ -66,7 +66,7 @@ public class Home {
 		Home h = null;
 		if((h = getFromCache(p,w)) != null) return h;
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(),w});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(),w});
 			try {
 				rs.next();
 				Location l = new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), rs.getFloat("yaw"), rs.getFloat("pitch"));
@@ -85,7 +85,7 @@ public class Home {
 	}
 	public static boolean exists(Player p, String w){
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(), w});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(), w});
 			try {
 				return (rs != null && rs.next());
 			} catch (SQLException e) {
@@ -129,7 +129,7 @@ public class Home {
 		float pitch = location.getPitch();
 		String world = location.getWorld().getName();
 		if(Backend.isSQL()){
-			Backend.getSQL().prepared("REPLACE INTO zp_homes(owner,x,y,z,yaw,pitch,world) VALUES(?,?,?,?,?,?,?);", 
+			Backend.getSQL().preparedUpdate("REPLACE INTO zp_homes(owner,x,y,z,yaw,pitch,world) VALUES(?,?,?,?,?,?,?);", 
 					new Object[]{owner,x,y,z,yaw,pitch,world});
 		}else{
 			File f = new File(Backend.getHomeFolder(), owner+"-"+world+".yml");

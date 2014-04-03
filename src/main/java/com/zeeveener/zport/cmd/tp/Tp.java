@@ -1,12 +1,12 @@
 package com.zeeveener.zport.cmd.tp;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.zeeveener.zcore.bukkit.ZChat;
+import com.zeeveener.zcore.bukkit.ZUtils;
 import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.checks.Cooldown;
 import com.zeeveener.zport.checks.TpBlocks;
@@ -35,9 +35,9 @@ public class Tp implements CommandExecutor{
 			return true;
 		}
 		
-		Player to;
+		Player to = ZUtils.getPlayerByName(args[0]);
 		
-		if((to = Bukkit.getPlayer(args[0])) == null || !to.isOnline()){
+		if(to == null || !to.isOnline()){
 			ZChat.error(s, "That player is offline.");
 			return true;
 		}

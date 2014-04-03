@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,13 +24,14 @@ public class Warp {
 
 	private static HashMap<String, Warp> warpCache = new HashMap<String, Warp>();
 	private static Object lock = new Object();
-	private String name, owner;
+	private String name;
+	private UUID owner;
 	private Location location;
 	private Boolean priv;
 	private Long lastUsed, created;
 	private Integer uses;
 	
-	public Warp(String n, String o, Location l, Boolean p, Long c, Long lu, Integer u){
+	public Warp(String n, UUID o, Location l, Boolean p, Long c, Long lu, Integer u){
 		name = n;
 		owner = o;
 		location = l;
@@ -40,10 +42,10 @@ public class Warp {
 		
 		addToWarpCache(this);
 	}
-	public Warp(String n, String o, Location l, Boolean p, Long c){
+	public Warp(String n, UUID o, Location l, Boolean p, Long c){
 		this(n,o,l,p,c,0L,0);
 	}
-	public Warp(String n, String o, Location l, Boolean p){
+	public Warp(String n, UUID o, Location l, Boolean p){
 		this(n,o,l,p,System.currentTimeMillis());
 	}
 	
@@ -70,7 +72,7 @@ public class Warp {
 	}
 	
 	public static Warp create(Player p, String n, Boolean pr){
-		Warp w = new Warp(n, p.getName(), p.getLocation(), pr);
+		Warp w = new Warp(n, p.getUniqueId(), p.getLocation(), pr);
 		w.save();
 		return w;
 	}
@@ -78,7 +80,7 @@ public class Warp {
 		removeFromWarpCache(name);
 		
 		if(Backend.isSQL()){
-			Backend.getSQL().prepared("", new Object[]{});
+			//Backend.getSQL().preparedUpdate("", new Object[]{});
 		}else{
 			File f = new File(Backend.getWarpFolder(), name+".yml");
 			if(f.exists()){
@@ -97,7 +99,7 @@ public class Warp {
 	public String getName(){
 		return name;
 	}
-	public String getOwner(){
+	public UUID getOwner(){
 		return owner;
 	}
 	public Location getLocation(){
@@ -132,7 +134,7 @@ public class Warp {
 			String[] w = s.split(":");
 			
 			String n = w[0];
-			String o = w[1];
+			UUID o = UUID.fromString(w[1]);
 			boolean p = Boolean.parseBoolean(w[2]);
 			long c = Long.parseLong(w[3]);
 			long l = Long.parseLong(w[4]);
@@ -155,7 +157,7 @@ public class Warp {
 		}
 	}
 	public String toString(){
-		return "[" + name + ":" + owner + ":" + priv + ":" 
+		return "[" + name + ":" + owner.toString() + ":" + priv + ":" 
 				+ created + ":" + lastUsed + ":" + uses + ":" 
 				+ rtd(location.getX()) + ":" + rtd(location.getY()) + ":" 
 				+ rtd(location.getZ()) + ":" + rtd(location.getYaw()) + ":" 
@@ -168,7 +170,7 @@ public class Warp {
 		if(Warp.existsInWarpCache(n)) return true;
 		
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_warps WHERE name='?';", new Object[]{n});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_warps WHERE name='?';", new Object[]{n});
 			try {
 				return (rs != null && rs.next());
 			} catch (SQLException e) {
@@ -184,13 +186,13 @@ public class Warp {
 		Warp w;
 		if((w = Warp.getFromWarpCache(n)) == null){
 			if(Backend.isSQL()){
-				ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_warps WHERE name='?';", new Object[]{n});
+				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_warps WHERE name='?';", new Object[]{n});
 				try {
 					rs.next();
 					Location loc = new Location(Bukkit.getServer().getWorld(rs.getString("world")), 
 							rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), 
 							rs.getFloat("yaw"), rs.getFloat("pitch"));
-					w = new Warp(rs.getString("name"), rs.getString("owner"), 
+					w = new Warp(rs.getString("name"), UUID.fromString(rs.getString("owner")), 
 							loc, rs.getBoolean("private"), rs.getLong("date_created"), 
 							rs.getLong("last_used"), rs.getInt("total_uses"));
 				} catch (SQLException e) {
@@ -207,7 +209,7 @@ public class Warp {
 	}
 	public void save(){
 		String n = getName();
-		String o = getOwner();
+		UUID o = getOwner();
 		boolean p = getPrivate();
 		int u = getUses();
 		long c = getCreated();
@@ -215,7 +217,7 @@ public class Warp {
 		Location l = getLocation();
 		
 		if(Backend.isSQL()){
-			Backend.getSQL().prepared("INSERT INTO zp_warps(date_created,last_used,total_uses,name,owner,private,x,y,z,yaw,pitch,world) "
+			Backend.getSQL().preparedUpdate("INSERT INTO zp_warps(date_created,last_used,total_uses,name,owner,private,x,y,z,yaw,pitch,world) "
 					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?", 
 					new Object[]{c,lu,u,n,o,p,l.getX(),l.getY(),l.getZ(),l.getYaw(),l.getPitch(),l.getWorld().getName(),lu,u});
 		}else{

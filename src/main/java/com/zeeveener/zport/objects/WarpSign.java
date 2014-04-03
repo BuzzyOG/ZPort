@@ -77,7 +77,7 @@ public class WarpSign{
 		if((w = getFromCache(n)) == null){
 			
 			if(Backend.isSQL()){
-				ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
+				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
 				try {
 					if(rs == null || !rs.next()) return null;
 					double x = rs.getDouble("x");
@@ -155,7 +155,7 @@ public class WarpSign{
 		if(Backend.isSQL()){
 			String tN = "NOTSET";
 			if(target != null) tN = target.getName();
-			Backend.getSQL().prepared("INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
+			Backend.getSQL().preparedUpdate("INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
 					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?, target='?'", 
 					new Object[]{created, lastUsed, uses, name, tN, 
 							owner, priv, loc.getX(), loc.getY(), 
@@ -196,7 +196,7 @@ public class WarpSign{
 		removeFromCache(this);
 		
 		if(Backend.isSQL()){
-			Backend.getSQL().prepared("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[]{name, owner});
+			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[]{name, owner});
 		}else{
 			File f = new File(Backend.getSignFolder(), name+".yml");
 			if(f.exists()){
@@ -209,7 +209,7 @@ public class WarpSign{
 		if(existsInCache(n)) return true;
 		
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().prepared("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[]{n});
 			try {
 				return (rs != null && rs.next());
 			} catch (SQLException e) {
