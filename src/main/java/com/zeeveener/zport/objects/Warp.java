@@ -219,7 +219,7 @@ public class Warp {
 		if(Backend.isSQL()){
 			Backend.getSQL().preparedUpdate("INSERT INTO zp_warps(date_created,last_used,total_uses,name,owner,private,x,y,z,yaw,pitch,world) "
 					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?", 
-					new Object[]{c,lu,u,n,o,p,l.getX(),l.getY(),l.getZ(),l.getYaw(),l.getPitch(),l.getWorld().getName(),lu,u});
+					new Object[]{c,lu,u,n,o.toString(),p,l.getX(),l.getY(),l.getZ(),l.getYaw(),l.getPitch(),l.getWorld().getName(),lu,u});
 		}else{
 			File f = new File(Backend.getWarpFolder(), n+".yml");
 			if(!f.exists()){
@@ -231,7 +231,7 @@ public class Warp {
 			}
 			FileConfiguration config = YamlConfiguration.loadConfiguration(f);
 			config.set("Name", n);
-			config.set("Owner", o);
+			config.set("Owner", o.toString());
 			config.set("Private", p);
 			config.set("Uses", u);
 			config.set("Created", c);

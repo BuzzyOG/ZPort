@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -22,29 +23,22 @@ public class Home {
 	private static HashMap<String, Home> cache = new HashMap<String, Home>();
 	private static Object lock = new Object();
 	private Location location;
-	private String owner;
+	private UUID owner;
 	
 	public Home(Player p, Location l){
-		owner = p.getName();
+		owner = p.getUniqueId();
 		location = l;
 	}
 	
-	/*TODO
-	 *
-	 * - Home cache.
-	 * 		- When player logs in, add home to cache.
-	 * 		- When player logs out, remove home from cache.
-	 */
-	
 	public static boolean existsInCache(Player p, String w){
 		synchronized(lock){
-			return cache.containsKey(p.getName() + "-" + w);
+			return cache.containsKey(p.getUniqueId().toString() + "-" + w);
 		}
 	}
 	public static Home getFromCache(Player p, String w){
 		synchronized(lock){
-			if(!cache.containsKey(p.getName() + "-" + w)) return null;
-			return cache.get(p.getName() + "-" + w);
+			if(!cache.containsKey(p.getUniqueId().toString() + "-" + w)) return null;
+			return cache.get(p.getUniqueId().toString() + "-" + w);
 		}
 	}
 	public static void removeFromCache(Home h){
@@ -66,7 +60,7 @@ public class Home {
 		Home h = null;
 		if((h = getFromCache(p,w)) != null) return h;
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(),w});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getUniqueId().toString(),w});
 			try {
 				rs.next();
 				Location l = new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), rs.getFloat("yaw"), rs.getFloat("pitch"));
@@ -75,7 +69,7 @@ public class Home {
 				e.printStackTrace();
 			}
 		}else{
-			File f = new File(Backend.getHomeFolder(), p.getName()+"-"+w+".yml");
+			File f = new File(Backend.getHomeFolder(), p.getUniqueId().toString()+"-"+w+".yml");
 			FileConfiguration c = YamlConfiguration.loadConfiguration(f);
 			Location l = new Location(Bukkit.getWorld(c.getString("Location.World")), c.getDouble("Location.X"), c.getDouble("Location.Y"), c.getDouble("Location.Z"),
 					Float.parseFloat(c.getString("Location.Yaw")), Float.parseFloat(c.getString("Location.Pitch")));
@@ -85,7 +79,7 @@ public class Home {
 	}
 	public static boolean exists(Player p, String w){
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getName(), w});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[]{p.getUniqueId().toString(), w});
 			try {
 				return (rs != null && rs.next());
 			} catch (SQLException e) {
@@ -93,7 +87,7 @@ public class Home {
 				return false;
 			}
 		}else{
-			File f = new File(Backend.getHomeFolder(), p.getName()+"-"+w+".yml");
+			File f = new File(Backend.getHomeFolder(), p.getUniqueId().toString()+"-"+w+".yml");
 			return f.exists();
 		}
 	}
@@ -104,7 +98,7 @@ public class Home {
 	}
 	
 	public String getOwner(){
-		return owner;
+		return owner.toString();
 	}
 	public Location getLocation(){
 		return location;
@@ -114,7 +108,7 @@ public class Home {
 	}
 	
 	public boolean goTo(Player p){
-		if(p.getName().equals(owner)){
+		if(p.getUniqueId().toString().equals(owner)){
 			Warmup.warmup(p, ZPort.config.getInt("Warmup.Home", 0), location);
 			return true;
 		}

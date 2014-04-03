@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,14 +24,15 @@ public class WarpSign{
 
 	private static HashMap<String, WarpSign> cache = new HashMap<String, WarpSign>();
 	private static Object lock = new Object();
-	private String name, owner;
+	private String name;
+	private UUID owner;
 	private int uses;
 	private long created, lastUsed;
 	private boolean priv;
 	private Location loc;
 	private WarpSign target;
 	
-	public WarpSign(String n, String o, Boolean p, Location l, Long c, Long lu, Integer u){
+	public WarpSign(String n, UUID o, Boolean p, Location l, Long c, Long lu, Integer u){
 		name = n;
 		owner = o;
 		priv = p;
@@ -41,10 +43,10 @@ public class WarpSign{
 		
 		addToCache(this);
 	}
-	public WarpSign(String n, String o, Boolean p, Location l, Long c){
+	public WarpSign(String n, UUID o, Boolean p, Location l, Long c){
 		this(n,o,p,l,c,0L,0);
 	}
-	public WarpSign(String n, String o, Boolean p, Location l){
+	public WarpSign(String n, UUID o, Boolean p, Location l){
 		this(n,o,p,l,System.currentTimeMillis());
 	}
 
@@ -89,7 +91,7 @@ public class WarpSign{
 					Location l = new Location(world, x, y, z, yaw, pitch);
 					String na = rs.getString("name");
 					Boolean p = rs.getBoolean("private");
-					String o = rs.getString("owner");
+					UUID o = UUID.fromString(rs.getString("owner"));
 					String t = rs.getString("target");
 					long c = rs.getLong("date_created");
 					long lu = rs.getLong("last_used");
@@ -126,7 +128,7 @@ public class WarpSign{
 		addToCache(this);
 	}
 	
-	public String getOwner(){ return owner;}
+	public UUID getOwner(){ return owner;}
 	public String getName(){ return name;}
 	public WarpSign getTarget(){ return target;}
 	public int getUses(){ return uses;}
@@ -146,7 +148,7 @@ public class WarpSign{
 	}
 	
 	public static WarpSign create(Player p, String n, boolean b){
-		WarpSign w = new WarpSign(n, p.getName(), b, p.getLocation());
+		WarpSign w = new WarpSign(n, p.getUniqueId(), b, p.getLocation());
 		w.save();
 		return w;
 	}
@@ -158,7 +160,7 @@ public class WarpSign{
 			Backend.getSQL().preparedUpdate("INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
 					+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?, target='?'", 
 					new Object[]{created, lastUsed, uses, name, tN, 
-							owner, priv, loc.getX(), loc.getY(), 
+							owner.toString(), priv, loc.getX(), loc.getY(), 
 							loc.getZ(), loc.getYaw(), loc.getPitch(), 
 							loc.getWorld().getName(), lastUsed, uses, tN});
 		}else{
@@ -169,7 +171,7 @@ public class WarpSign{
 				}
 				FileConfiguration c = YamlConfiguration.loadConfiguration(f);
 				c.set("Name", name);
-				c.set("Owner", owner);
+				c.set("Owner", owner.toString());
 				if(target == null){
 					c.set("Target", "NOTSET");
 				}else{
@@ -196,7 +198,7 @@ public class WarpSign{
 		removeFromCache(this);
 		
 		if(Backend.isSQL()){
-			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[]{name, owner});
+			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[]{name, owner.toString()});
 		}else{
 			File f = new File(Backend.getSignFolder(), name+".yml");
 			if(f.exists()){
@@ -233,7 +235,7 @@ public class WarpSign{
 		}else{
 			n = target.getName();
 		}
-		return "[" + name + ":" + owner + ":" + priv + ":" + n + ":" 
+		return "[" + name + ":" + owner.toString() + ":" + priv + ":" + n + ":" 
 				+ created + ":" + lastUsed + ":" + uses + ":" 
 				+ rtd(loc.getX()) + ":" + rtd(loc.getY()) + ":" 
 				+ rtd(loc.getZ()) + ":" + rtd(loc.getYaw()) + ":" 
@@ -245,7 +247,7 @@ public class WarpSign{
 			String[] w = s.split(":");
 			
 			String n = w[0];
-			String o = w[1];
+			UUID o = UUID.fromString(w[1]);
 			boolean p = Boolean.parseBoolean(w[2]);
 			WarpSign t = WarpSign.getWarpSign(w[3]);
 			long c = Long.parseLong(w[4]);
