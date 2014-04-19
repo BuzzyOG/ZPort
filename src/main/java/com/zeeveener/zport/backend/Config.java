@@ -10,7 +10,7 @@ public class Config extends ZConfig{
 		init();
 	}
 
-	private void init(){
+	protected void init(){
 		if(!configContains("Backend.Type")) set("Backend.Type", "file");
 		if(!configContains("Backend.MySQL.Host")) set("Backend.MySQL.Host", "localhost");
 		if(!configContains("Backend.MySQL.Database")) set("Backend.MySQL.Database", "mcdb");

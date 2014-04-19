@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.backend.Backend;
 import com.zeeveener.zport.checks.Warmup;
@@ -84,7 +83,7 @@ public class WarpSign{
 		if((w = getFromCache(n)) == null){
 
 			if(Backend.isSQL()){
-				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[] {n});
+				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name=?;", new Object[] {n});
 				try{
 					if(rs == null || !rs.next()) return null;
 					double x = rs.getDouble("x");
@@ -191,7 +190,7 @@ public class WarpSign{
 			if(target != null) tN = target.getName();
 			Backend.getSQL().preparedUpdate(
 					"INSERT INTO zp_signs(date_created,last_used,total_uses,name,target,owner,private,x,y,z,yaw,pitch,world) "
-							+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?, target='?'",
+							+ "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE last_used=?, total_uses=?, target=?",
 					new Object[] {created, lastUsed, uses, name, tN, owner.toString(), priv, loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch(),
 							loc.getWorld().getName(), lastUsed, uses, tN});
 		}else{
@@ -230,7 +229,7 @@ public class WarpSign{
 		removeFromCache(this);
 
 		if(Backend.isSQL()){
-			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name='?' && owner='?';", new Object[] {name, owner.toString()});
+			Backend.getSQL().preparedUpdate("DELETE FROM zp_signs WHERE name=? && owner=?;", new Object[] {name, owner.toString()});
 		}else{
 			File f = new File(Backend.getSignFolder(), name + ".yml");
 			if(f.exists()){
@@ -244,7 +243,7 @@ public class WarpSign{
 		if(existsInCache(n)) return true;
 
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name='?';", new Object[] {n});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_signs WHERE name=?;", new Object[] {n});
 			try{
 				return (rs != null && rs.next());
 			}catch(SQLException e){
@@ -308,7 +307,7 @@ public class WarpSign{
 		Bukkit.getScheduler().runTaskTimerAsynchronously(Bukkit.getPluginManager().getPlugin("ZPort"), new Runnable(){
 			@Override
 			public void run(){
-				ZChat.toConsole("Clearing WarpSign Cache...");
+				ZPort.chat.toConsole("Clearing WarpSign Cache...");
 				int count = 0;
 				for(WarpSign w : cache.values()){
 					if(w.getLastUsed() <= (System.currentTimeMillis() - 10 * 60 * 1000)){
@@ -317,7 +316,7 @@ public class WarpSign{
 						count++;
 					}
 				}
-				ZChat.toConsole("Cleared " + count + " entries from WarpSign Cache.");
+				ZPort.chat.toConsole("Cleared " + count + " entries from WarpSign Cache.");
 			}
 		}, 5 * 60 * 20L, 10 * 60 * 20L);
 	}

@@ -1,6 +1,7 @@
 package com.zeeveener.zport;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.zeeveener.zcore.bukkit.ZChat;
@@ -36,11 +37,12 @@ public class ZPort extends JavaPlugin{
 	 */
 
 	public static Config	config;
+	public static ZChat chat;
 
 	public void onEnable(){
 		config = new Config(this);
 		new Backend(this);
-		new ZChat(this);
+		chat = new ZChat(this, "", ChatColor.GOLD);
 
 		Warp.startCacheThread();
 		WarpSign.startCacheThread();

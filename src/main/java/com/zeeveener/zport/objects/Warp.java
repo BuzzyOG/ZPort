@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.backend.Backend;
 import com.zeeveener.zport.checks.Warmup;
@@ -186,7 +185,7 @@ public class Warp{
 		if(Warp.existsInWarpCache(n)) return true;
 
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_warps WHERE name='?';", new Object[] {n});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_warps WHERE name=?;", new Object[] {n});
 			try{
 				return (rs != null && rs.next());
 			}catch(SQLException e){
@@ -203,7 +202,7 @@ public class Warp{
 		Warp w;
 		if((w = Warp.getFromWarpCache(n)) == null){
 			if(Backend.isSQL()){
-				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_warps WHERE name='?';", new Object[] {n});
+				ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_warps WHERE name=?;", new Object[] {n});
 				try{
 					rs.next();
 					Location loc = new Location(Bukkit.getServer().getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"),
@@ -277,7 +276,7 @@ public class Warp{
 		Bukkit.getScheduler().runTaskTimerAsynchronously(Bukkit.getPluginManager().getPlugin("ZPort"), new Runnable(){
 			@Override
 			public void run(){
-				ZChat.toConsole("Cleaning Warp Cache...");
+				ZPort.chat.toConsole("Cleaning Warp Cache...");
 				long current = System.currentTimeMillis();
 				int cleared = 0;
 				for(String s : warpCache.keySet()){
@@ -288,7 +287,7 @@ public class Warp{
 						cleared++;
 					}
 				}
-				ZChat.toConsole("Cleared " + cleared + " entries from the Warp Cache.");
+				ZPort.chat.toConsole("Cleared " + cleared + " entries from the Warp Cache.");
 			}
 		}, 10 * 60 * 20L, 10 * 60 * 20L);
 	}

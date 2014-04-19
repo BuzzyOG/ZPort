@@ -2,7 +2,6 @@ package com.zeeveener.zport.backend;
 
 import java.io.File;
 
-import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zport.ZPort;
 
 public class Backend{
@@ -65,8 +64,8 @@ public class Backend{
 		if(!ZPort.config.getString("Backend.Type", "file").equalsIgnoreCase(type)){
 			String old = type;
 			type = ZPort.config.getString("Backend.Type", "file");
-			ZChat.toOps("Backend has Changed from " + ZChat.m + old + ZChat.g + " to " + ZChat.m + type);
-			ZChat.toConsole("Backend has Changed from " + old + " to " + type);
+			ZPort.chat.toOps("Backend has Changed from " + ZPort.chat.m + old + ZPort.chat.g + " to " + ZPort.chat.m + type);
+			ZPort.chat.toConsole("Backend has Changed from " + old + " to " + type);
 		}
 	}
 }

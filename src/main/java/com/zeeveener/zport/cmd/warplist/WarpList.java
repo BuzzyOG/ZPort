@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zcore.bukkit.ZUtils;
+import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.backend.Backend;
 import com.zeeveener.zport.objects.Warp;
 
@@ -29,7 +30,7 @@ public class WarpList{
 			@Override
 			public void run(){
 				List<Warp> warps = getAllWarps();
-				String title = "List of Warps: " + ZChat.m;
+				String title = ZPort.chat.m + "{ " + ZPort.chat.g +  "List of Warps: " + ZPort.chat.m;
 				boolean a = false, n = false, u = false, byW = false, byP = false;
 				for(int i = 0; i < args.length - 1; i += 2){
 					String op = args[i];
@@ -39,16 +40,16 @@ public class WarpList{
 						if(a){
 							continue;
 						}else if(s instanceof Player && !((Player) s).hasPermission("zp.warp.list.byAge")){
-							ZChat.error(s, "You don't have permission to sort by Warp Age.");
+							ZPort.chat.error(s, "You don't have permission to sort by Warp Age.");
 							return;
 						}else if(value.equalsIgnoreCase("a")){
 							Sort.sortByAgeAscending(warps);
-							title = title + "Age-A ";
+							title = title + "A-A ";
 						}else if(value.equalsIgnoreCase("d")){
 							Sort.sortByAgeDescending(warps);
-							title = title + "Age-D ";
+							title = title + "A-D ";
 						}else{
-							ZChat.error(s, "I had a problem sorting by age because I don't know what " + ZChat.m + value + " means.");
+							ZPort.chat.error(s, "I had a problem sorting by age because I don't know what " + ZPort.chat.m + value + " means.");
 							return;
 						}
 						a = true;
@@ -58,16 +59,16 @@ public class WarpList{
 						if(n){
 							continue;
 						}else if(s instanceof Player && !((Player) s).hasPermission("zp.warp.list.byName")){
-							ZChat.error(s, "You don't have permission to sort by Warp Name.");
+							ZPort.chat.error(s, "You don't have permission to sort by Warp Name.");
 							return;
 						}else if(value.equalsIgnoreCase("a")){
 							Sort.sortByNameAscending(warps);
-							title = title + "Name-A ";
+							title = title + "N-A ";
 						}else if(value.equalsIgnoreCase("d")){
 							Sort.sortByNameDescending(warps);
-							title = title + "Name-D ";
+							title = title + "N-D ";
 						}else{
-							ZChat.error(s, "I had a problem sorting by name because I don't know what " + ZChat.m + value + " means.");
+							ZPort.chat.error(s, "I had a problem sorting by name because I don't know what " + ZPort.chat.m + value + " means.");
 							return;
 						}
 						n = true;
@@ -77,16 +78,16 @@ public class WarpList{
 						if(u){
 							continue;
 						}else if(s instanceof Player && !((Player) s).hasPermission("zp.warp.list.byUses")){
-							ZChat.error(s, "You don't have permission to sort by Warp Uses.");
+							ZPort.chat.error(s, "You don't have permission to sort by Warp Uses.");
 							return;
 						}else if(value.equalsIgnoreCase("a")){
 							Sort.sortByUsesAscending(warps);
-							title = title + "Uses-A ";
+							title = title + "U-A ";
 						}else if(value.equalsIgnoreCase("d")){
 							Sort.sortByUsesDescending(warps);
-							title = title + "Uses-D ";
+							title = title + "U-D ";
 						}else{
-							ZChat.error(s, "I had a problem sorting by uses because I don't know what " + ZChat.m + value + " means.");
+							ZPort.chat.error(s, "I had a problem sorting by uses because I don't know what " + ZPort.chat.m + value + " means.");
 							return;
 						}
 						u = true;
@@ -101,7 +102,7 @@ public class WarpList{
 								warps.remove(w);
 							}
 						}
-						title = title + "World-" + value + " ";
+						title = title + "W-" + value + " ";
 						byW = true;
 					}
 
@@ -138,7 +139,7 @@ public class WarpList{
 								}
 							}
 						}
-						title = title + "Player-" + value + " ";
+						title = title + "P-" + value + " ";
 						byP = true;
 					}
 				}
@@ -146,13 +147,13 @@ public class WarpList{
 				String msg = "";
 				for(Warp w : warps){
 					if(w.getPrivate()){
-						msg = msg + ZChat.e + w.getName() + " ";
+						msg = msg + ZPort.chat.e + w.getName() + " ";
 					}else{
-						msg = msg + ZChat.g + w.getName() + " ";
+						msg = msg + ChatColor.GREEN + w.getName() + " ";
 					}
 				}
-				ZChat.message(s, title);
-				ZChat.message(s, msg);
+				ZPort.chat.message(s, title + "}");
+				ZPort.chat.message(s, msg);
 			}
 		});
 	}

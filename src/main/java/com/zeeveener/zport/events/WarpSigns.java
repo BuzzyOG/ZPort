@@ -13,7 +13,6 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zport.ZPort;
 import com.zeeveener.zport.objects.WarpSign;
 
@@ -50,19 +49,19 @@ public class WarpSigns implements Listener{
 		WarpSign sign = WarpSign.create(p, e.getLine(1), e.getLine(3).equalsIgnoreCase("private"));
 		;
 		WarpSign target = WarpSign.getWarpSign(e.getLine(2));
-		String targetMessage = ZChat.e + " No Target";
+		String targetMessage = ZPort.chat.e + " No Target";
 
 		if(target == null){
 			e.setLine(2, "-NoTarget-");
 		}else if(target.getPrivate() && !p.hasPermission("zp.warpsign.target.private")){
-			ZChat.error(p, "You don't have permission to target private warpsigns.");
+			ZPort.chat.error(p, "You don't have permission to target private warpsigns.");
 			e.setLine(2, "-NoTarget-");
 		}else{
 			sign.setTarget(target);
-			targetMessage = " Target " + ZChat.m + target.getName();
+			targetMessage = " Target " + ZPort.chat.m + target.getName();
 		}
-		ZChat.message(p, "Created WarpSign " + ZChat.m + sign.getName() + "with" + targetMessage);
-		ZChat.toConsole(p.getName() + " created WarpSign: " + sign.getName());
+		ZPort.chat.message(p, "Created WarpSign " + ZPort.chat.m + sign.getName() + "with" + targetMessage);
+		ZPort.chat.toConsole(p.getName() + " created WarpSign: " + sign.getName());
 	}
 
 	@EventHandler
@@ -78,11 +77,11 @@ public class WarpSigns implements Listener{
 
 		if(!sign.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())){
 			if(sign.getPrivate() && !p.hasPermission("zp.warpsign.destroy.others.private")){
-				ZChat.error(p, "You don't have permission to destroy other players' Private WarpSigns.");
+				ZPort.chat.error(p, "You don't have permission to destroy other players' Private WarpSigns.");
 				e.setCancelled(true);
 				return;
 			}else if(!sign.getPrivate() && !p.hasPermission("zp.warpsign.destroy.others.public")){
-				ZChat.error(p, "You don't have permission to destroy other players' Public WarpSigns.");
+				ZPort.chat.error(p, "You don't have permission to destroy other players' Public WarpSigns.");
 				e.setCancelled(true);
 				return;
 			}else{
@@ -90,14 +89,14 @@ public class WarpSigns implements Listener{
 			}
 		}else if(sign.getPrivate()){
 			if(!p.hasPermission("zp.warpsign.destroy.own.private")){
-				ZChat.error(p, "You don't have permission to destroy your Private WarpSigns.");
+				ZPort.chat.error(p, "You don't have permission to destroy your Private WarpSigns.");
 				e.setCancelled(true);
 				return;
 			}
 			sign.delete();
 		}else{
 			if(!p.hasPermission("zp.warpsign.destroy.own.public")){
-				ZChat.error(p, "You don't have permission to destroy your own Public WarpSigns.");
+				ZPort.chat.error(p, "You don't have permission to destroy your own Public WarpSigns.");
 				e.setCancelled(true);
 				return;
 			}
@@ -105,10 +104,10 @@ public class WarpSigns implements Listener{
 		}
 
 		if(!WarpSign.exists(s.getLine(1))){
-			ZChat.message(p, "Destroyed WarpSign: " + s.getLine(1));
-			ZChat.toConsole(p.getName() + " Destroyed WarpSign: " + s.getLine(1));
+			ZPort.chat.message(p, "Destroyed WarpSign: " + s.getLine(1));
+			ZPort.chat.toConsole(p.getName() + " Destroyed WarpSign: " + s.getLine(1));
 		}else{
-			ZChat.error(p, "An Error Occurred... Unable to Destroy Warpsign.");
+			ZPort.chat.error(p, "An Error Occurred... Unable to Destroy Warpsign.");
 		}
 	}
 
@@ -119,7 +118,7 @@ public class WarpSigns implements Listener{
 		Sign s = (Sign) e.getBlock().getState();
 		WarpSign sign = WarpSign.getWarpSign(s.getLine(1));
 		sign.delete();
-		ZChat.toConsole("WarpSign " + s.getLine(1) + " was broken by natural forces.");
+		ZPort.chat.toConsole("WarpSign " + s.getLine(1) + " was broken by natural forces.");
 	}
 
 	@EventHandler
@@ -127,7 +126,7 @@ public class WarpSigns implements Listener{
 		if(!(e.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
 		if(!isWarpSign(e.getClickedBlock())) return;
 		if(ZPort.config.getBoolean("Feature.WarpSign", false)){
-			ZChat.error(e.getPlayer(), "WarpSigns have been disabled.");
+			ZPort.chat.error(e.getPlayer(), "WarpSigns have been disabled.");
 			return;
 		}
 
@@ -141,28 +140,28 @@ public class WarpSigns implements Listener{
 
 		WarpSign sign = WarpSign.getWarpSign(s.getLine(1));
 		if(sign.getTarget() == null){
-			ZChat.error(p, "The Target WarpSign doesn't exist.");
+			ZPort.chat.error(p, "The Target WarpSign doesn't exist.");
 			return;
 		}
 
 		if(!sign.getOwner().toString().equalsIgnoreCase(p.getUniqueId().toString())){
 			if(sign.getPrivate() && !p.hasPermission("zp.warpsign.use.others.private")){
-				ZChat.error(p, "You don't have permission to use other players' Private WarpSigns.");
+				ZPort.chat.error(p, "You don't have permission to use other players' Private WarpSigns.");
 				return;
 			}else if(!sign.getPrivate() && !p.hasPermission("zp.warpsign.use.others.public")){
-				ZChat.error(p, "You don't have permission to use other players' Public WarpSigns.");
+				ZPort.chat.error(p, "You don't have permission to use other players' Public WarpSigns.");
 				return;
 			}
 		}else if(sign.getPrivate() && !p.hasPermission("zp.warpsign.use.own.private")){
-			ZChat.error(p, "You don't have permission to use your own Private WarpSigns.");
+			ZPort.chat.error(p, "You don't have permission to use your own Private WarpSigns.");
 			return;
 		}else if(!p.hasPermission("zp.warpsign.use.own.public")){
-			ZChat.error(p, "You don't have permission to use your own Public WarpSigns.");
+			ZPort.chat.error(p, "You don't have permission to use your own Public WarpSigns.");
 			return;
 		}
 
 		sign.goTo(p);
-		ZChat.message(p, "You have arrived at " + sign.getTarget().getName());
+		ZPort.chat.message(p, "You have arrived at " + sign.getTarget().getName());
 	}
 
 	private boolean isWarpSign(Block b){

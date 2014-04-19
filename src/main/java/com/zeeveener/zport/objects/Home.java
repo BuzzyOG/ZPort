@@ -63,12 +63,15 @@ public class Home{
 		Home h = null;
 		if((h = getFromCache(p, w)) != null) return h;
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[] {p.getUniqueId().toString(), w});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE owner=? && world=?", new Object[] {p.getUniqueId().toString(), w});
 			try{
-				rs.next();
-				Location l = new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), rs.getFloat("yaw"),
-						rs.getFloat("pitch"));
-				h = new Home(p, l);
+				if(rs.next()){
+					Location l = new Location(Bukkit.getWorld(rs.getString("world")), rs.getDouble("x"), rs.getDouble("y"), rs.getDouble("z"), rs.getFloat("yaw"),
+							rs.getFloat("pitch"));
+					h = new Home(p, l);
+				}else{
+					return null;
+				}
 			}catch(SQLException e){
 				e.printStackTrace();
 			}
@@ -84,7 +87,7 @@ public class Home{
 
 	public static boolean exists(Player p, String w){
 		if(Backend.isSQL()){
-			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE name='?' && world='?'", new Object[] {p.getUniqueId().toString(), w});
+			ResultSet rs = Backend.getSQL().preparedQuery("SELECT * FROM zp_homes WHERE owner=? && world=?", new Object[] {p.getUniqueId().toString(), w});
 			try{
 				return (rs != null && rs.next());
 			}catch(SQLException e){
@@ -116,7 +119,7 @@ public class Home{
 	}
 
 	public boolean goTo(Player p){
-		if(p.getUniqueId().toString().equals(owner)){
+		if(p.getUniqueId().toString().equals(owner.toString())){
 			Warmup.warmup(p, ZPort.config.getInt("Warmup.Home", 0), location);
 			return true;
 		}
@@ -132,11 +135,11 @@ public class Home{
 		String world = location.getWorld().getName();
 		if(Backend.isSQL()){
 			Backend.getSQL().preparedUpdate("REPLACE INTO zp_homes(owner,x,y,z,yaw,pitch,world) VALUES(?,?,?,?,?,?,?);",
-					new Object[] {owner, x, y, z, yaw, pitch, world});
+					new Object[] {owner.toString(), x, y, z, yaw, pitch, world});
 		}else{
-			File f = new File(Backend.getHomeFolder(), owner + "-" + world + ".yml");
+			File f = new File(Backend.getHomeFolder(), owner.toString() + "-" + world + ".yml");
 			FileConfiguration c = YamlConfiguration.loadConfiguration(f);
-			c.set("Owner", owner);
+			c.set("Owner", owner.toString());
 			c.set("Location.World", world);
 			c.set("Location.X", x);
 			c.set("Location.Y", y);
@@ -152,7 +155,7 @@ public class Home{
 	}
 
 	public String toStringSimple(){
-		return owner + "(" + location.getWorld().getName() + ":" + rtd(location.getX()) + "," + rtd(location.getY()) + "," + rtd(location.getZ()) + ")";
+		return owner.toString() + "(" + location.getWorld().getName() + ":" + rtd(location.getX()) + "," + rtd(location.getY()) + "," + rtd(location.getZ()) + ")";
 	}
 
 	private double rtd(final double d){

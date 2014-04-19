@@ -8,8 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.zeeveener.zcore.bukkit.ZChat;
 import com.zeeveener.zcore.bukkit.ZUtils;
+import com.zeeveener.zport.ZPort;
 
 public class Tpahere implements CommandExecutor{
 
@@ -17,7 +17,7 @@ public class Tpahere implements CommandExecutor{
 	public boolean onCommand(CommandSender s, Command cmd, String label, String[] args){
 
 		if(!(s instanceof Player)){
-			ZChat.error(s, "Only players can send Teleport Requests at this time.");
+			ZPort.chat.error(s, "Only players can send Teleport Requests at this time.");
 			return true;
 		}
 		if(args.length != 1){ return false; }
@@ -26,11 +26,11 @@ public class Tpahere implements CommandExecutor{
 		Player summoned = ZUtils.getPlayerByName(args[0]);
 
 		if(!p.hasPermission("zp.request.tpahere")){
-			ZChat.error(s, "You don't have permission to use /tpahere");
+			ZPort.chat.error(s, "You don't have permission to use /tpahere");
 			return true;
 		}
 		if(summoned == null){
-			ZChat.error(s, "That player is not online.");
+			ZPort.chat.error(s, "That player is not online.");
 			return true;
 		}
 
@@ -42,11 +42,11 @@ public class Tpahere implements CommandExecutor{
 		r.summonRequestFrom(p.getUniqueId());
 
 		List<String> msg = new ArrayList<String>();
-		msg.add("To ACCEPT: " + ZChat.m + "/tpha");
-		msg.add("To DENY: " + ZChat.m + "/tphd");
-		ZChat.message(summoned, "Summon Request from " + p.getName(), msg.toArray(new String[0]));
+		msg.add("To ACCEPT: " + ZPort.chat.m + "/tpha");
+		msg.add("To DENY: " + ZPort.chat.m + "/tphd");
+		ZPort.chat.message(summoned, "Summon Request from " + p.getName(), msg.toArray(new String[0]));
 
-		ZChat.message(s, "Summon Request Sent.");
+		ZPort.chat.message(s, "Summon Request Sent.");
 
 		return true;
 	}
